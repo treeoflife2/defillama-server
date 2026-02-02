@@ -40,6 +40,7 @@ export const BASE_URLS = {
   PERPS: getProApiBaseUrl(),
   ETFS: getProApiBaseUrl(),
   NARRATIVES: getProApiBaseUrl(),
+  RWA: getProApiBaseUrl(),
 };
 
 const stablecoinsBaseUrl = BASE_URLS.STABLECOINS;
@@ -176,6 +177,19 @@ export const TOKEN_LIQUIDITY = {
   HISTORICAL_LIQUIDITY: (token: string) => `/api/historicalLiquidity/${token}`,
 } as const;
 
+export const RWA = {
+  BASE_URL: getProApiBaseUrl(),
+  CURRENT: '/rwa/current',
+  LIST: '/rwa/list',
+  STATS: '/rwa/stats',
+  ID_MAP: '/rwa/id-map',
+  CHART_BY_ID: (id: string) => `/rwa/chart/${id}`,
+  CHART_BY_NAME: (name: string) => `/rwa/chart/name/${name}`,
+  RWA_BY_ID: (id: string) => `/rwa/rwa/${id}`,
+  BY_CATEGORY: (category: string) => `/rwa/category/${category}`,
+  BY_CHAIN: (chain: string) => `/rwa/chain/${chain}`,
+} as const;
+
 export const endpoints = {
   TVL,
   STABLECOINS,
@@ -192,6 +206,7 @@ export const endpoints = {
   ETFS,
   NARRATIVES,
   TOKEN_LIQUIDITY,
+  RWA,
 } as const;
 
 export const API_CONFIG = {
