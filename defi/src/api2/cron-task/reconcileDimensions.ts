@@ -108,9 +108,19 @@ type ReconcileEntry = {
 //   { adapterType: AdapterType.DERIVATIVES, id: '5761', label: 'hyperliquid', days: 14, mode: 'daily'    },
 //
 const RECONCILE_CONFIG: ReconcileEntry[] = [
+  // delay in dune dex decoded tables 
   { adapterType: AdapterType.FEES, id: '6922', label: 'fomo', days: 7, mode: 'interval' },
   { adapterType: AdapterType.FEES, id: '7768', label: 'terminal', days: 7, mode: 'interval' },
+
+  // kyberswap aggregator volumes are delayed in their api
   { adapterType: AdapterType.AGGREGATORS, id: '3982', label: 'kyberswap aggregator', days: 7, mode: 'daily' },
+
+  // kamino liquidity api delayed reconciliation
+  { adapterType: AdapterType.FEES, id: '2062', label: 'kamino liquidity', days: 7, mode: 'interval' },
+
+  // near intent api delays
+  { adapterType: AdapterType.FEES, id: '6225', label: 'near intents', days: 7, mode: 'interval' },
+  { adapterType: AdapterType.DEXS, id: '6225', label: 'near intents', days: 7, mode: 'interval' },
 ]
 
 // ============================================================================
