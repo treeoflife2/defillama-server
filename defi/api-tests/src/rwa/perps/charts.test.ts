@@ -8,6 +8,7 @@ import {
   expectSuccessfulResponse,
   expectValidTimestamp,
 } from '../../../utils/testHelpers';
+import { expectCorsHeaders } from '../../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA_PERPS.BASE_URL);
 
@@ -20,6 +21,10 @@ describe('RWA Perps API - Chart by ID', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaPerpsCurrentResponse>(endpoints.RWA_PERPS.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return chart data for a valid market ID', async () => {
@@ -51,6 +56,10 @@ describe('RWA Perps API - Chart by Venue', () => {
     listResponse = await apiClient.get<RwaPerpsListResponse>(endpoints.RWA_PERPS.LIST);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
+  });
+
   it('should return chart data for a valid venue', async () => {
     const venues = listResponse.data.venues;
     if (!venues || venues.length === 0) return;
@@ -71,6 +80,10 @@ describe('RWA Perps API - Chart by Category', () => {
     listResponse = await apiClient.get<RwaPerpsListResponse>(endpoints.RWA_PERPS.LIST);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
+  });
+
   it('should return chart data for a valid category', async () => {
     const categories = listResponse.data.categories;
     if (!categories || categories.length === 0) return;
@@ -85,6 +98,17 @@ describe('RWA Perps API - Chart by Category', () => {
 });
 
 describe('RWA Perps API - Chart Overview Breakdown', () => {
+  let overviewResponse: ApiResponse<any>;
+  beforeAll(async () => {
+    overviewResponse = await apiClient.get(
+      `${endpoints.RWA_PERPS.CHART_OVERVIEW_BREAKDOWN}?key=openInterest&breakdown=venue`
+    );
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(overviewResponse);
+  });
+
   it('should return overview breakdown for each (key, breakdown) pair on the all target', async () => {
     for (const key of METRIC_KEYS) {
       for (const breakdown of ALL_BREAKDOWNS) {
@@ -136,6 +160,17 @@ describe('RWA Perps API - Chart Overview Breakdown', () => {
 });
 
 describe('RWA Perps API - Chart Contract Breakdown', () => {
+  let contractResponse: ApiResponse<any>;
+  beforeAll(async () => {
+    contractResponse = await apiClient.get(
+      `${endpoints.RWA_PERPS.CHART_CONTRACT_BREAKDOWN}?key=openInterest`
+    );
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(contractResponse);
+  });
+
   it('should return contract breakdown for each metric key on the all target', async () => {
     for (const key of METRIC_KEYS) {
       const response = await apiClient.get(

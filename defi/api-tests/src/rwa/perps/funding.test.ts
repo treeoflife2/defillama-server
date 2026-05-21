@@ -7,6 +7,7 @@ import {
   expectValidTimestamp,
 } from '../../../utils/testHelpers';
 import { validate } from '../../../utils/validation';
+import { expectCorsHeaders } from '../../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA_PERPS.BASE_URL);
 
@@ -18,6 +19,10 @@ describe('RWA Perps API - Funding History', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaPerpsCurrentResponse>(endpoints.RWA_PERPS.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return funding history for a valid market ID', async () => {

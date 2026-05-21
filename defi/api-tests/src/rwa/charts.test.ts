@@ -5,7 +5,9 @@ import {
   expectSuccessfulResponse,
   expectNonEmptyArray,
   expectValidTimestamp,
+  expectFreshData,
 } from '../../utils/testHelpers';
+import { expectCorsHeaders } from '../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA.BASE_URL);
 
@@ -24,6 +26,10 @@ describe('RWA API - Chart by ID', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaCurrentResponse>(endpoints.RWA.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return chart data for a valid RWA ID', async () => {
@@ -47,6 +53,10 @@ describe('RWA API - Chart by Name', () => {
     idMapResponse = await apiClient.get<RwaIdMap>(endpoints.RWA.ID_MAP);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(idMapResponse);
+  });
+
   it('should return chart data for a valid RWA name', async () => {
     const names = Object.keys(idMapResponse.data);
     expect(names.length).toBeGreaterThan(0);
@@ -64,10 +74,31 @@ describe('RWA API - Chart by Name', () => {
 });
 
 describe('RWA API - Breakdown Charts', () => {
+  let chainBreakdownResponse: ApiResponse<any>;
+  beforeAll(async () => {
+    chainBreakdownResponse = await apiClient.get(endpoints.RWA.CHART_CHAIN_BREAKDOWN);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(chainBreakdownResponse);
+  });
+
   it('should return chain breakdown chart data', async () => {
     const response = await apiClient.get(endpoints.RWA.CHART_CHAIN_BREAKDOWN);
     expectSuccessfulResponse(response);
     expect(Array.isArray(response.data)).toBe(true);
+  });
+
+  it('should have a fresh latest datapoint on chain-breakdown (within 2 days)', async () => {
+    const response = await apiClient.get<Array<{ timestamp?: number; date?: number }>>(
+      endpoints.RWA.CHART_CHAIN_BREAKDOWN
+    );
+    if (response.status !== 200 || !Array.isArray(response.data) || response.data.length === 0) return;
+    const timestamps = response.data
+      .map((p) => Number(p.timestamp ?? p.date))
+      .filter((n) => Number.isFinite(n));
+    if (timestamps.length === 0) return;
+    expectFreshData(timestamps, 86400 * 2);
   });
 
   it('should return category breakdown chart data', async () => {
@@ -122,6 +153,15 @@ describe('RWA API - Breakdown Charts', () => {
 });
 
 describe('RWA API - Chart by Chain', () => {
+  let chainResponse: ApiResponse<any>;
+  beforeAll(async () => {
+    chainResponse = await apiClient.get(endpoints.RWA.CHART_BY_CHAIN('Ethereum'));
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(chainResponse);
+  });
+
   it('should return chart data for Ethereum', async () => {
     const response = await apiClient.get(endpoints.RWA.CHART_BY_CHAIN('Ethereum'));
     // May be 404 if no data for this chain, which is acceptable
@@ -145,6 +185,10 @@ describe('RWA API - Chart by Category', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaCurrentResponse>(endpoints.RWA.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return chart data for a valid category', async () => {
@@ -183,6 +227,10 @@ describe('RWA API - Chart by Platform', () => {
     listResponse = await apiClient.get<RwaListResponse>(endpoints.RWA.LIST);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
+  });
+
   it('should return chart data for a valid platform', async () => {
     const platforms = listResponse.data.platforms;
     if (!platforms || platforms.length === 0) return;
@@ -213,6 +261,10 @@ describe('RWA API - Chart by Asset Group', () => {
 
   beforeAll(async () => {
     listResponse = await apiClient.get<RwaListResponse>(endpoints.RWA.LIST);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
   });
 
   it('should return chart data for a valid assetGroup', async () => {
@@ -247,6 +299,10 @@ describe('RWA API - Chart Asset', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaCurrentResponse>(endpoints.RWA.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return asset chart data for a valid ID', async () => {

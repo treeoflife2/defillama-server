@@ -5,6 +5,7 @@ import {
   expectSuccessfulResponse,
   expectObjectResponse,
 } from '../../utils/testHelpers';
+import { expectCorsHeaders } from '../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA.BASE_URL);
 
@@ -13,6 +14,10 @@ describe('RWA API - Filter by Category', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaCurrentResponse>(endpoints.RWA.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return RWAs filtered by category', async () => {
@@ -52,6 +57,10 @@ describe('RWA API - Filter by Chain', () => {
     currentResponse = await apiClient.get<RwaCurrentResponse>(endpoints.RWA.CURRENT);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
+  });
+
   it('should return RWAs filtered by chain', async () => {
     // Find an item that has chain data in onChainMcap
     const withChains = currentResponse.data.find(
@@ -86,6 +95,10 @@ describe('RWA API - Filter by Asset Group', () => {
 
   beforeAll(async () => {
     listResponse = await apiClient.get<RwaListResponse>(endpoints.RWA.LIST);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
   });
 
   it('should return RWAs filtered by assetGroup', async () => {

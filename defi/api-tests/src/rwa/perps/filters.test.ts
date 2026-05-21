@@ -10,6 +10,7 @@ import {
   expectNonEmptyArray,
 } from '../../../utils/testHelpers';
 import { validate } from '../../../utils/validation';
+import { expectCorsHeaders } from '../../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA_PERPS.BASE_URL);
 
@@ -18,6 +19,10 @@ describe('RWA Perps API - Filter by Contract', () => {
 
   beforeAll(async () => {
     listResponse = await apiClient.get<RwaPerpsListResponse>(endpoints.RWA_PERPS.LIST);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
   });
 
   it('should return markets matching a known contract', async () => {
@@ -50,6 +55,10 @@ describe('RWA Perps API - Filter by Venue', () => {
     listResponse = await apiClient.get<RwaPerpsListResponse>(endpoints.RWA_PERPS.LIST);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
+  });
+
   it('should return markets matching a known venue', async () => {
     const venues = listResponse.data.venues;
     if (!venues || venues.length === 0) return;
@@ -77,6 +86,10 @@ describe('RWA Perps API - Filter by Category', () => {
     listResponse = await apiClient.get<RwaPerpsListResponse>(endpoints.RWA_PERPS.LIST);
   });
 
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
+  });
+
   it('should return markets matching a known category', async () => {
     const categories = listResponse.data.categories;
     if (!categories || categories.length === 0) return;
@@ -102,6 +115,10 @@ describe('RWA Perps API - Filter by Asset Group', () => {
 
   beforeAll(async () => {
     listResponse = await apiClient.get<RwaPerpsListResponse>(endpoints.RWA_PERPS.LIST);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(listResponse);
   });
 
   it('should return markets matching a known assetGroup', async () => {

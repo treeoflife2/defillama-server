@@ -8,6 +8,7 @@ import {
   expectValidTimestamp,
 } from '../../utils/testHelpers';
 import { validate } from '../../utils/validation';
+import { expectCorsHeaders } from '../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA.BASE_URL);
 
@@ -19,6 +20,10 @@ describe('RWA API - Flows', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaCurrentResponse>(endpoints.RWA.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return flow series for a valid RWA ID with start param', async () => {

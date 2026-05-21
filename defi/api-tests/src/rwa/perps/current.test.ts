@@ -11,6 +11,7 @@ import {
   expectNonEmptyArray,
 } from '../../../utils/testHelpers';
 import { validate } from '../../../utils/validation';
+import { expectCorsHeaders } from '../../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA_PERPS.BASE_URL);
 
@@ -22,6 +23,10 @@ describe('RWA Perps API - Current', () => {
   });
 
   describe('Basic Response Validation', () => {
+    it('should expose CORS headers', () => {
+      expectCorsHeaders(response);
+    });
+
     it('should return successful response with array of markets', () => {
       expectSuccessfulResponse(response);
       expect(isRwaPerpsCurrentResponse(response.data)).toBe(true);
@@ -63,6 +68,10 @@ describe('RWA Perps API - Market by ID', () => {
 
   beforeAll(async () => {
     currentResponse = await apiClient.get<RwaPerpsCurrentResponse>(endpoints.RWA_PERPS.CURRENT);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(currentResponse);
   });
 
   it('should return a single market for a valid ID', async () => {

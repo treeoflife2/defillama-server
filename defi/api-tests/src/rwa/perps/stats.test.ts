@@ -7,6 +7,7 @@ import {
   expectObjectResponse,
 } from '../../../utils/testHelpers';
 import { validate } from '../../../utils/validation';
+import { expectCorsHeaders } from '../../../utils/corsHelpers';
 
 const apiClient = createApiClient(endpoints.RWA_PERPS.BASE_URL);
 
@@ -15,6 +16,10 @@ describe('RWA Perps API - Stats', () => {
 
   beforeAll(async () => {
     response = await apiClient.get<RwaPerpsStats>(endpoints.RWA_PERPS.STATS);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(response);
   });
 
   it('should return successful response with object structure', () => {
@@ -33,6 +38,10 @@ describe('RWA Perps API - ID Map', () => {
 
   beforeAll(async () => {
     response = await apiClient.get<RwaPerpsIdMap>(endpoints.RWA_PERPS.ID_MAP);
+  });
+
+  it('should expose CORS headers', () => {
+    expectCorsHeaders(response);
   });
 
   it('should return successful response with object structure', () => {
