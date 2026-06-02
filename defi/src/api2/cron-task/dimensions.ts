@@ -10,6 +10,7 @@ import { parentProtocolsById } from "../../protocols/parentProtocols";
 import { addAggregateRecords, getDimensionsCacheV2, storeDimensionsCacheV2, storeDimensionsMetadata, transformDimensionRecord, validateAggregateRecords, } from "../utils/dimensionsUtils";
 import { storeEmissionsCache, } from "../utils/emissionsUtils";
 import { getNextTimeS, getTimeSDaysAgo, getUnixTimeNow, timeSToUnix, unixTimeToTimeS } from "../utils/time";
+import { computeAnnualizedTotal1y, getCoveredDays } from "./annualizedTotal";
 
 import { runWithRuntimeLogging, cronNotifyOnDiscord, tableToString } from "../utils";
 import * as sdk from '@defillama/sdk'
@@ -559,6 +560,24 @@ ${tableToString(invalidFinancialStatementRecords, ['protocol', 'timeframe', 'key
             summary.monthlyAverage1y = (summary.total1y / _protocolData.lastOneYearData.length) * 30.44
           }
         });
+        // Overload total1y with an "annualized" basis (average1y/monthlyAverage1y above already
+        // captured the real TTM, so they are unaffected): actual trailing-12-month total when there
+        // is >=1y of data, otherwise annualize the available history to a 12-month run-rate
+        // (totalAllTime/coveredDays*365). coveredDays spans the protocol's first to last finalized
+        // daily record (the in-progress current UTC day is excluded from these sums by design).
+        // Set to null when it can't be computed, so the api/frontend fall back to total30d * 12.2.
+        {
+          const coveredDays = getCoveredDays(Object.keys(protocol.records))
+          const overloadTotal1y = (summary: any) => {
+            summary.total1y = computeAnnualizedTotal1y({ coveredDays, total1y: summary.total1y, totalAllTime: summary.totalAllTime })
+          }
+          overloadTotal1y(protocolSummary)
+          // Only overload per-chain total1y when chain summaries are actually maintained. For parent
+          // protocols (skipChainSummary) the chainSummary only carries a partial totalAllTime, so a
+          // chain run-rate computed over the parent's full coveredDays would be misleading.
+          if (!skipChainSummary)
+            Object.values(protocolSummary.chainSummary ?? {}).forEach((chainSummary: any) => overloadTotal1y(chainSummary))
+        }
         // change_1d
         protocolSummaryAction(protocolSummary, (summary: any) => {
           if (typeof summary.total24h === 'number' && typeof summary.total48hto24h === 'number' && summary.total48hto24h !== 0)
