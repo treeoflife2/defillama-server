@@ -5575,5 +5575,26 @@ const data6: Protocol[] = [
     parentProtocol: "parent#chainlink",
     listedAt: 1780442964,
   },
+  {
+    id: "7974",
+    name: "Venice",
+    address: null,
+    symbol: "VVV",
+    url: "https://venice.ai/",
+    description:
+      "Venice is a private, uncensored AI platform offering text, image, and code generation. Subscription revenue funds a programmatic VVV buy-and-burn on Base, returning value to token holders",
+    chain: "Base",
+    logo: `${baseIconsUrl}/venice.jpg`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Decentralized AI",
+    chains: ["Base"],
+    module: "venice/index.js",
+    twitter: "AskVenice",
+    dimensions: {
+      fees: "venice",
+    },
+  },
 ];
 export default data6;
