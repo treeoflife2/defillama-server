@@ -12,6 +12,7 @@ export const openInterestResponseSchema = z.union([
     total48hto24h: z.union([z.number(), z.null()]).optional(),
     total7d: z.union([z.number(), z.null()]).optional(),
     total30d: z.union([z.number(), z.null()]).optional(),
+    total1y: z.union([z.number(), z.null()]).optional(),
     totalAllTime: z.union([z.number(), z.null()]).optional(),
     change_1d: z.union([z.number(), z.null()]).optional(),
     protocols: z.array(z.any()).optional(),
@@ -71,6 +72,7 @@ export const perpsOverviewItemSchema = z.object({
   total48hto24h: z.union([z.number(), z.null()]).optional(),
   total7d: z.union([z.number(), z.null()]).optional(),
   total30d: z.union([z.number(), z.null()]).optional(),
+  total1y: z.union([z.number(), z.null()]).optional(),
   totalAllTime: z.union([z.number(), z.null()]).optional(),
   change_1d: z.union([z.number(), z.null()]).optional(),
   
