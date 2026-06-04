@@ -30,6 +30,19 @@ const skipDefaultRecentDataCheckForAdapters = new Set([
   '7194', // Variational
 ])
 
+// Errors whose message matches any of these patterns are expected/benign - typically adapters or
+// helpers that intentionally throw to skip a run (e.g. dune indexer-delay gating). They are excluded
+// from the error count and Discord alerts so they don't bury real failures. Add more patterns here as needed.
+const EXCLUDED_ERROR_PATTERNS: RegExp[] = [
+  /\[dune\] skipped during store-all/, // dune indexer-delay window skip - see dimension-adapters helpers/dune.ts
+  /Dune queries are not supported in v2 adapters/, // v2 dune adapter guard (adapter should be migrated to v1)
+]
+
+const isExcludedError = (raw: any): boolean => {
+  const message = raw?.message || (raw && raw.toString()) || ''
+  return typeof message === 'string' && EXCLUDED_ERROR_PATTERNS.some((pattern) => pattern.test(message))
+}
+
 export type DimensionRunOptions = {
   timestamp?: number
   adapterType: AdapterType
@@ -194,7 +207,13 @@ export const handler2 = async (options: DimensionRunOptions) => {
     if (onCompleteCalled) return results;
     onCompleteCalled = true;
 
-    const errorObjects = errors.map(({ raw, item, }: any) => {
+    // drop expected/benign errors (e.g. intentional gating throws) so they don't count or alert
+    const excludedErrors = errors.filter(({ raw }: any) => isExcludedError(raw))
+    const reportedErrors = errors.filter(({ raw }: any) => !isExcludedError(raw))
+    if (excludedErrors.length)
+      console.log(`[${adapterType}] Excluded ${excludedErrors.length} expected error(s) from alerts (e.g. dune gating skips)`)
+
+    const errorObjects = reportedErrors.map(({ raw, item, }: any) => {
       let message = raw?.message || (raw && raw.toString()) || 'Unknown error'
       return {
         adapter: item?.name,
@@ -208,18 +227,18 @@ export const handler2 = async (options: DimensionRunOptions) => {
     const timeTakenSeconds = Math.floor((debugTimeEnd - _debugTimeStart) / 1000)
 
     if (!isRunFromRefillScript && !isDryRun) {
-      console.log(`[${adapterType}] Success: ${results.length} Errors: ${errors.length} Time taken: ${timeTakenSeconds}s`)
-      console.log('[JSON-log]', JSON.stringify({ success: results.length, errors: errors.length, timeTaken: timeTakenSeconds, type: 'adapterFinalRes', key: 'adapterFinalRes-' + adapterType, adapterType }))
+      console.log(`[${adapterType}] Success: ${results.length} Errors: ${reportedErrors.length} Time taken: ${timeTakenSeconds}s`)
+      console.log('[JSON-log]', JSON.stringify({ success: results.length, errors: reportedErrors.length, timeTaken: timeTakenSeconds, type: 'adapterFinalRes', key: 'adapterFinalRes-' + adapterType, adapterType }))
       try {
         await sendDiscordAlert(
-          `[${adapterType}] Success: ${results.length} Errors: ${errors.length} Time taken: ${timeTakenSeconds}`,
+          `[${adapterType}] Success: ${results.length} Errors: ${reportedErrors.length} Time taken: ${timeTakenSeconds}`,
           notificationType
         )
       } catch (e: any) {
         console.error('sendDiscordAlert failed:', e?.message || e)
       }
     } else if (!isRunFromRefillScript) {
-      console.log(`[${adapterType}] Success: ${results.length} Errors: ${errors.length} Time taken: ${timeTakenSeconds}s (dry-run, no Discord)`)
+      console.log(`[${adapterType}] Success: ${results.length} Errors: ${reportedErrors.length} Time taken: ${timeTakenSeconds}s (dry-run, no Discord)`)
     }
 
     if (errorObjects.length) {
@@ -634,7 +653,8 @@ export const handler2 = async (options: DimensionRunOptions) => {
     await elastic.addRuntimeLog({ runtime: endTime - startTime, success, metadata, })
 
     if (errorObject) {
-      await elastic.addErrorLog({ errorStringFull: JSON.stringify(errorObject), metadata } as any)
+      if (!isExcludedError(errorObject)) // don't log expected/benign errors (e.g. intentional gating throws)
+        await elastic.addErrorLog({ errorStringFull: JSON.stringify(errorObject), metadata } as any)
       throw errorObject
     }
   }
