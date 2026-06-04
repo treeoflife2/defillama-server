@@ -90,6 +90,9 @@ describe('Fees V2 API - Metrics Protocol Overview', () => {
           if (data.total1y !== null && data.total1y !== undefined) {
             expectValidNumber(data.total1y);
           }
+          if (data.annualized1y !== null && data.annualized1y !== undefined) {
+            expectValidNumber(data.annualized1y);
+          }
         });
 
         it('should have change_1d if present', () => {

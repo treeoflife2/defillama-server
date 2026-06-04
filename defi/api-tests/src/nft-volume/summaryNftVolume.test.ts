@@ -80,6 +80,11 @@ describe('NFT Volume API - Summary', () => {
           expectValidNumber(data.total1y);
           expectNonNegativeNumber(data.total1y);
         }
+
+        if (data.annualized1y !== null && data.annualized1y !== undefined) {
+          expectValidNumber(data.annualized1y);
+          expectNonNegativeNumber(data.annualized1y);
+        }
       });
 
       it('should have valid change percentages when present', () => {

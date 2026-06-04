@@ -79,6 +79,11 @@ describe('Volumes API - Overview Options', () => {
           expectValidNumber(overviewResponse.data.total1y);
           expectNonNegativeNumber(overviewResponse.data.total1y);
         }
+
+        if (overviewResponse.data.annualized1y !== null && overviewResponse.data.annualized1y !== undefined) {
+          expectValidNumber(overviewResponse.data.annualized1y);
+          expectNonNegativeNumber(overviewResponse.data.annualized1y);
+        }
       });
 
       it('should have chronologically ordered chart data', () => {

@@ -559,23 +559,23 @@ ${tableToString(invalidFinancialStatementRecords, ['protocol', 'timeframe', 'key
             summary.monthlyAverage1y = (summary.total1y / _protocolData.lastOneYearData.length) * 30.44
           }
         });
-        // Overload total1y with an "annualized" basis (average1y/monthlyAverage1y above already
-        // captured the real TTM, so they are unaffected): actual trailing-12-month total when there
-        // is >=1y of data, otherwise annualize the available history to a 12-month run-rate
-        // (totalAllTime/coveredDays*365). coveredDays spans the protocol's first to last finalized
-        // daily record (the in-progress current UTC day is excluded from these sums by design).
-        // Set to null when it can't be computed, so the api/frontend fall back to total30d * 12.2.
+        // annualized1y: a separate "annualized" basis that does NOT touch total1y (which stays the
+        // observed trailing-twelve-month sum). >=1y of data -> actual TTM; <1y of data -> annualize
+        // the available history to a 12-month run-rate (totalAllTime/coveredDays*365); null when it
+        // can't be computed, so consumers can fall back to total30d * 12.2. coveredDays spans the
+        // protocol's first to last finalized daily record (the in-progress current UTC day is
+        // excluded from these sums by design).
         {
           const coveredDays = getCoveredDays(Object.keys(protocol.records))
-          const overloadTotal1y = (summary: any) => {
-            summary.total1y = computeAnnualizedTotal1y({ coveredDays, total1y: summary.total1y, totalAllTime: summary.totalAllTime })
+          const setAnnualized1y = (summary: any) => {
+            summary.annualized1y = computeAnnualizedTotal1y({ coveredDays, total1y: summary.total1y, totalAllTime: summary.totalAllTime })
           }
-          overloadTotal1y(protocolSummary)
-          // Only overload per-chain total1y when chain summaries are actually maintained. For parent
+          setAnnualized1y(protocolSummary)
+          // Only set per-chain annualized1y when chain summaries are actually maintained. For parent
           // protocols (skipChainSummary) the chainSummary only carries a partial totalAllTime, so a
           // chain run-rate computed over the parent's full coveredDays would be misleading.
           if (!skipChainSummary)
-            Object.values(protocolSummary.chainSummary ?? {}).forEach((chainSummary: any) => overloadTotal1y(chainSummary))
+            Object.values(protocolSummary.chainSummary ?? {}).forEach((chainSummary: any) => setAnnualized1y(chainSummary))
         }
         // change_1d
         protocolSummaryAction(protocolSummary, (summary: any) => {

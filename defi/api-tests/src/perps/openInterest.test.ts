@@ -108,6 +108,11 @@ describe('Perps API - Open Interest', () => {
           expectNonNegativeNumber(data.total1y);
         }
 
+        if (data.annualized1y !== undefined && data.annualized1y !== null) {
+          expectValidNumber(data.annualized1y);
+          expectNonNegativeNumber(data.annualized1y);
+        }
+
         if (data.totalAllTime !== undefined && data.totalAllTime !== null) {
           expectValidNumber(data.totalAllTime);
           expectNonNegativeNumber(data.totalAllTime);
