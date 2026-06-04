@@ -354,19 +354,6 @@ export const handler2 = async (options: DimensionRunOptions) => {
 
       if (runType === 'store-all') {
 
-        // Detect adapters that depend on external indexers (dune/allium), which lag behind chain head.
-        const hasDuneDependency = adaptor.dependencies?.includes('dune' as any) ?? false
-        const hasAlliumDependency = adaptor.dependencies?.includes('allium' as any) ?? false
-        const hasIndexerDependency = hasDuneDependency || hasAlliumDependency
-
-        // Safety net for dune-dependent adapters: they should be V1 (pulled once a day) so we don't run
-        // expensive dune queries every hour. If someone forgets to set version to 1 on a dune adapter, skip
-        // it here during the hourly store-all run - the missing-data/refill script will fill it the next day.
-        if (!isAdapterVersionV1 && hasDuneDependency) {
-          console.log(`Skipping ${adapterType} - ${module} - V2 adapter with dune dependency, will be filled by refill script`)
-          return;
-        }
-
         const date = new Date()
         const hours = date.getUTCHours()
         // if it is an expensive adapter run every 4 hours or after 20:00 UTC
@@ -411,13 +398,6 @@ export const handler2 = async (options: DimensionRunOptions) => {
         } else { // it is a version 1 adapter - we pull yesterday's data
           if (haveYesterdayData) {
             console.log(`Skipping ${adapterType} - ${protocol.module} already have yesterday data`)
-            return;
-          }
-
-          // dune/allium indexers lag behind chain head, so give them a 1 hour buffer: don't pull yesterday's
-          // data at 00:00 UTC, wait until 01:00 UTC so the previous day is fully indexed and the record is complete.
-          if (hasIndexerDependency && hours < 1) {
-            console.log(`Skipping ${adapterType} - ${protocol.module} - V1 indexer (dune/allium) adapter, waiting until 01:00 UTC for complete data`)
             return;
           }
 
@@ -491,6 +471,7 @@ export const handler2 = async (options: DimensionRunOptions) => {
           cacheResults: runType === 'store-all',
           deadChains: deadChainsSet,
           metadata: protocolMetadata,
+          runType, // pass the run mode so adapters/helpers (e.g. dune/allium) can gate themselves
         })
         adaptorRecordV2JSON = res.adaptorRecordV2JSON
         tb = res.breakdownByToken
