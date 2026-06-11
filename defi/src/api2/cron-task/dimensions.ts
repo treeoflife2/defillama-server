@@ -559,23 +559,40 @@ ${tableToString(invalidFinancialStatementRecords, ['protocol', 'timeframe', 'key
             summary.monthlyAverage1y = (summary.total1y / _protocolData.lastOneYearData.length) * 30.44
           }
         });
-        // annualized1y: a separate "annualized" basis that does NOT touch total1y (which stays the
-        // observed trailing-twelve-month sum). >=1y of data -> actual TTM; <1y of data -> annualize
-        // the available history to a 12-month run-rate (totalAllTime/coveredDays*365); null when it
-        // can't be computed, so consumers can fall back to total30d * 12.2. coveredDays spans the
-        // protocol's first to last finalized daily record (the in-progress current UTC day is
-        // excluded from these sums by design).
+        // annualized1y: separate from total1y (observed TTM sum). Coverage starts at the first
+        // non-zero day for this metric and runs through the latest record, so pre-launch zero
+        // padding does not block annualization for metrics like holders revenue / buybacks.
         {
-          const coveredDays = getCoveredDays(Object.keys(protocol.records))
-          const setAnnualized1y = (summary: any) => {
-            summary.annualized1y = computeAnnualizedTotal1y({ coveredDays, total1y: summary.total1y, totalAllTime: summary.totalAllTime })
+          const metricTimeKeys = Object.keys(protocol.records).filter(
+            (timeS) => protocol.records[timeS].aggObject[recordType]
+          )
+          const { coveredDays, ttmDays } = getActiveMetricCoverage({
+            metricTimeKeys,
+            getValue: (timeS) => protocol.records[timeS].aggObject[recordType]?.value ?? 0,
+            ttmTimeKeys: lastOneYearTimeStrings,
+          })
+          const setAnnualized1y = (summary: any, metricCoveredDays = coveredDays, metricTtmDays = ttmDays) => {
+            summary.annualized1y = computeAnnualizedTotal1y({
+              coveredDays: metricCoveredDays,
+              ttmDays: metricTtmDays,
+              total1y: summary.total1y,
+              totalAllTime: summary.totalAllTime,
+            })
           }
           setAnnualized1y(protocolSummary)
-          // Only set per-chain annualized1y when chain summaries are actually maintained. For parent
-          // protocols (skipChainSummary) the chainSummary only carries a partial totalAllTime, so a
-          // chain run-rate computed over the parent's full coveredDays would be misleading.
-          if (!skipChainSummary)
-            Object.values(protocolSummary.chainSummary ?? {}).forEach((chainSummary: any) => setAnnualized1y(chainSummary))
+          if (!skipChainSummary) {
+            Object.entries(protocolSummary.chainSummary ?? {}).forEach(([chain, chainSummary]: any) => {
+              const chainMetricTimeKeys = metricTimeKeys.filter(
+                (timeS) => chain in (protocol.records[timeS].aggObject[recordType]?.chains ?? {})
+              )
+              const chainCoverage = getActiveMetricCoverage({
+                metricTimeKeys: chainMetricTimeKeys,
+                getValue: (timeS) => protocol.records[timeS].aggObject[recordType]?.chains?.[chain] ?? 0,
+                ttmTimeKeys: lastOneYearTimeStrings,
+              })
+              setAnnualized1y(chainSummary, chainCoverage.coveredDays, chainCoverage.ttmDays)
+            })
+          }
         }
         // change_1d
         protocolSummaryAction(protocolSummary, (summary: any) => {
@@ -1030,32 +1047,56 @@ function getNonNegativeValue(value: number) {
   return value > 0 ? value : 0
 }
 
+// Coverage for annualized1y: from the first non-zero record through the latest record.
+// Days before the metric went live (zero padding) are excluded; zeros after launch stay in.
+export function getActiveMetricCoverage({
+  metricTimeKeys,
+  getValue,
+  ttmTimeKeys,
+}: {
+  metricTimeKeys: string[]
+  getValue: (timeS: string) => number
+  ttmTimeKeys: Set<string>
+}): { coveredDays: number; ttmDays: number } {
+  const sortedKeys = [...metricTimeKeys].sort()
+  const firstActiveIdx = sortedKeys.findIndex((timeS) => getValue(timeS) > 0)
+  if (firstActiveIdx < 0) return { coveredDays: 0, ttmDays: 0 }
+
+  const activeTimeKeys = sortedKeys.slice(firstActiveIdx)
+  let ttmDays = 0
+  for (const timeS of activeTimeKeys) {
+    if (ttmTimeKeys.has(timeS)) ttmDays++
+  }
+  return { coveredDays: getCoveredDays(activeTimeKeys), ttmDays }
+}
+
 // Number of days spanned by a set of daily-record timeS keys, first to last (inclusive).
-// This is the coverage window used to decide whether total1y is a full trailing-twelve-month
-// figure or only a partial history that needs to be annualized to a run-rate.
 export function getCoveredDays(recordTimeKeys: string[]): number {
   if (!recordTimeKeys.length) return 0
   const unixDays = recordTimeKeys.map(timeSToUnix).sort((a, b) => a - b)
   return Math.round((unixDays[unixDays.length - 1] - unixDays[0]) / 86400) + 1
 }
 
-// Annualized basis used to overload total1y:
-//   - >=1y of data  -> actual trailing-twelve-month total (TTM)
-//   - <1y of data   -> annualize the available history to a 12-month run-rate
-//                       (totalAllTime / coveredDays * 365)
-//   - otherwise      -> null, so callers fall back to total30d * 12.2
-export function computeAnnualizedTotal1y({ coveredDays, total1y, totalAllTime }: {
+// Annualized basis for a single metric:
+//   - >=1y of metric coverage and >=1y of TTM data points -> actual TTM total
+//   - partial TTM window -> annualize total1y over ttmDays
+//   - otherwise -> annualize totalAllTime over coveredDays
+//   - null -> callers fall back to total30d * 12.2
+export function computeAnnualizedTotal1y({ coveredDays, ttmDays = 0, total1y, totalAllTime }: {
   coveredDays: number,
+  ttmDays?: number,
   total1y?: number | null,
   totalAllTime?: number | null,
 }): number | null {
   if (!Number.isFinite(coveredDays) || coveredDays <= 0) return null
 
   let annualized: number | null = null
-  if (coveredDays >= 365 && total1y != null) {
-    annualized = total1y                              // TTM (actual)
+  if (coveredDays >= 365 && ttmDays >= 365 && total1y != null) {
+    annualized = total1y
+  } else if (ttmDays > 0 && total1y != null) {
+    annualized = (total1y / ttmDays) * 365
   } else if (totalAllTime != null) {
-    annualized = (totalAllTime / coveredDays) * 365   // run-rate
+    annualized = (totalAllTime / coveredDays) * 365
   }
 
   return Number.isFinite(annualized as number) ? annualized : null
