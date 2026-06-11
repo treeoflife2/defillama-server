@@ -1059,7 +1059,7 @@ export function getActiveMetricCoverage({
   ttmTimeKeys: Set<string>
 }): { coveredDays: number; ttmDays: number } {
   const sortedKeys = [...metricTimeKeys].sort()
-  const firstActiveIdx = sortedKeys.findIndex((timeS) => getValue(timeS) > 0)
+  const firstActiveIdx = sortedKeys.findIndex((timeS) => getValue(timeS) !== 0)
   if (firstActiveIdx < 0) return { coveredDays: 0, ttmDays: 0 }
 
   const activeTimeKeys = sortedKeys.slice(firstActiveIdx)
