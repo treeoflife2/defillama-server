@@ -559,16 +559,15 @@ ${tableToString(invalidFinancialStatementRecords, ['protocol', 'timeframe', 'key
             summary.monthlyAverage1y = (summary.total1y / _protocolData.lastOneYearData.length) * 30.44
           }
         });
-        // annualized1y: separate from total1y (observed TTM sum). Coverage starts at the first
-        // non-zero day for this metric and runs through the latest record, so pre-launch zero
-        // padding does not block annualization for metrics like holders revenue / buybacks.
+        // annualized1y: run-rate basis exposed on the API. total1y stays the observed TTM sum;
+        // annualized1y annualizes when the metric has <1y of active coverage (e.g. recent buybacks).
         {
           const metricTimeKeys = Object.keys(protocol.records).filter(
-            (timeS) => protocol.records[timeS].aggObject[recordType]
+            (timeS) => protocol.records[timeS].aggObject[recordLabel]
           )
           const { coveredDays, ttmDays } = getActiveMetricCoverage({
             metricTimeKeys,
-            getValue: (timeS) => protocol.records[timeS].aggObject[recordType]?.value ?? 0,
+            getValue: (timeS) => protocol.records[timeS].aggObject[recordLabel]?.value ?? 0,
             ttmTimeKeys: lastOneYearTimeStrings,
           })
           const setAnnualized1y = (summary: any, metricCoveredDays = coveredDays, metricTtmDays = ttmDays) => {
@@ -583,11 +582,11 @@ ${tableToString(invalidFinancialStatementRecords, ['protocol', 'timeframe', 'key
           if (!skipChainSummary) {
             Object.entries(protocolSummary.chainSummary ?? {}).forEach(([chain, chainSummary]: any) => {
               const chainMetricTimeKeys = metricTimeKeys.filter(
-                (timeS) => chain in (protocol.records[timeS].aggObject[recordType]?.chains ?? {})
+                (timeS) => chain in (protocol.records[timeS].aggObject[recordLabel]?.chains ?? {})
               )
               const chainCoverage = getActiveMetricCoverage({
                 metricTimeKeys: chainMetricTimeKeys,
-                getValue: (timeS) => protocol.records[timeS].aggObject[recordType]?.chains?.[chain] ?? 0,
+                getValue: (timeS) => protocol.records[timeS].aggObject[recordLabel]?.chains?.[chain] ?? 0,
                 ttmTimeKeys: lastOneYearTimeStrings,
               })
               setAnnualized1y(chainSummary, chainCoverage.coveredDays, chainCoverage.ttmDays)
@@ -1048,7 +1047,7 @@ function getNonNegativeValue(value: number) {
 }
 
 // Coverage for annualized1y: from the first non-zero record through the latest record.
-// Days before the metric went live (zero padding) are excluded; zeros after launch stay in.
+// Pre-launch zero padding is excluded. Interim zero days after launch stay in the window.
 export function getActiveMetricCoverage({
   metricTimeKeys,
   getValue,
