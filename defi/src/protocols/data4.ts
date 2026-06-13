@@ -12457,7 +12457,7 @@ const data4: Protocol[] = [
     warningBanners: [
       {
         message:
-          "Fees and revenue here reflect only Helium's HNT buy-and-burn (HNT bought on the open market and burned, accruing to holders through supply reduction), a program discontinued on Jan 2, 2026. Data Credits burned for network usage are excluded: they are valued at the $0.50/GB peg (HIP-149) while carriers actually pay ~$0.10/GB, and the burned HNT is sourced from centralized-exchange wallets rather than a verifiable open-market buy, making it an inflated usage metric that can't be confirmed on-chain.",
+          "Data Credits burned for network usage are excluded from revenue: they are valued at the $0.50/GB peg (HIP-149) while carriers actually pay ~$0.10/GB, and the burned HNT is sourced from centralized-exchange wallets rather than a verifiable open-market buy, making it an inflated usage metric that can't be confirmed on-chain.",
         level: "alert",
       },
     ],
