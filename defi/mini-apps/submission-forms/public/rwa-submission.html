@@ -743,6 +743,20 @@
                 </div>
             </div>
 
+            <!-- Section 11: Contact -->
+            <div class="form-card">
+                <div class="form-section">
+                    <h2 class="section-title"><span class="icon">📨</span> 11. Contact</h2>
+
+                    <div class="form-group">
+                        <label>Contact
+                            <span class="hint">Email, Twitter/X handle, or Telegram so we can reach you if we have questions</span>
+                        </label>
+                        <input type="text" name="contact" placeholder="[email protected] or @handle">
+                    </div>
+                </div>
+            </div>
+
             </div><!-- /singleMode -->
 
             <!-- ═══════════════ MULTI TOKEN MODE ═══════════════ -->
@@ -782,6 +796,13 @@
                             <label>Contact Email</label>
                             <input type="email" name="multi_contactEmail" placeholder="team@issuer.com">
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact
+                            <span class="hint">Email, Twitter/X handle, or Telegram so we can reach you if we have questions</span>
+                        </label>
+                        <input type="text" name="multi_contact" placeholder="[email protected] or @handle">
                     </div>
                 </div>
             </div>
@@ -1484,6 +1505,7 @@
             data.description = fd.get('description');
             data.documentationLink = fd.get('documentationLink');
             data.contactEmail = fd.get('contactEmail');
+            data.contact = fd.get('contact');
             data.redemption = fd.get('redemption');
             data.redemptionProcess = fd.get('redemptionProcess');
 
@@ -1555,6 +1577,7 @@
             data.description = fd.get(p + 'description');
             data.documentationLink = fd.get(p + 'documentationLink');
             data.contactEmail = sharedIssuer.contactEmail;
+            data.contact = sharedIssuer.contact;
             data.redemption = fd.get(p + 'redemption') || sharedDefaults.redemption;
             data.redemptionProcess = fd.get(p + 'redemptionProcess');
 
@@ -1596,6 +1619,7 @@
                         twitter: fd.get('multi_twitter'),
                         telegram: fd.get('multi_telegram'),
                         contactEmail: fd.get('multi_contactEmail'),
+                        contact: fd.get('multi_contact'),
                     };
 
                     if (!sharedIssuer.issuer) {

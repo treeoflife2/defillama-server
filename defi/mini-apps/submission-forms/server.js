@@ -92,7 +92,8 @@ function formatRwaEmbed(data) {
     if (data.redemption)       fields.push({ name: '💱 Redemption Process', value: data.redemption, inline: false });
     if (data.description)      fields.push({ name: '📝 Description', value: data.description, inline: false });
     if (data.documentationLink) fields.push({ name: '📄 Documentation', value: data.documentationLink, inline: false });
-    if (data.contactEmail)     fields.push({ name: '📧 Contact', value: data.contactEmail, inline: false });
+    const contactLines = [data.contact ? `**Contact:** ${data.contact}` : null, data.contactEmail ? `**Email:** ${data.contactEmail}` : null].filter(Boolean);
+    if (contactLines.length) fields.push({ name: '📧 Contact', value: contactLines.join('\n'), inline: false });
 
     return { embeds: [{ title: `🆕 RWA Token Submission: ${data.tokenName || data.ticker || 'Unknown'}`, color: 0x58a6ff, fields, footer: { text: `Submitted at ${new Date().toISOString()}` } }] };
 }
@@ -104,12 +105,14 @@ function formatRwaBatchEmbed(tokens) {
     const website = tokens[0]?.website || '';
     const twitter = tokens[0]?.twitter || '';
     const contactEmail = tokens[0]?.contactEmail || '';
+    const contact = tokens[0]?.contact || '';
 
     // Shared issuer header
     const issuerLines = [`**Issuer:** ${issuer}`];
     if (website) issuerLines.push(`**Website:** ${website}`);
     if (twitter) issuerLines.push(`**Twitter:** ${twitter}`);
-    if (contactEmail) issuerLines.push(`**Contact:** ${contactEmail}`);
+    if (contact) issuerLines.push(`**Contact:** ${contact}`);
+    if (contactEmail) issuerLines.push(`**Email:** ${contactEmail}`);
     fields.push({ name: '🏢 Issuer Information', value: issuerLines.join('\n'), inline: false });
 
     for (let i = 0; i < tokens.length; i++) {
