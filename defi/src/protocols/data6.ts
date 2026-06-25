@@ -7682,7 +7682,7 @@ const data6: Protocol[] = [
     url: " ", // pending to add url "https://www.cookieswap.fun/"
     description: "Native DeFi powerhouse for swaps, liquidity, and yield in the COOK ecosystem.",
     chain: "CookieChain",
-    logo: `${protocolIconsUrl}/cookieswap.jpg`,
+    logo: `${protocolIconsUrl}/cookieswap`,
     audits: "0",
     gecko_id: null,
     cmcId: null,
@@ -7700,7 +7700,7 @@ const data6: Protocol[] = [
     url: " ", // pending to add url "https://bakedbazaar.art/"
     description: "NFT marketplace on Cookie Chain. Trade, collect, and celebrate with the COOK community.",
     chain: "CookieChain",
-    logo: `${protocolIconsUrl}/baked-bazaar.jpg`,
+    logo: `${protocolIconsUrl}/baked-bazaar`,
     audits: "0",
     gecko_id: null,
     cmcId: null,
