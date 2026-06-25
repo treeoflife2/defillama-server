@@ -6199,10 +6199,11 @@ export const chainCoingeckoIds = {
     },
   },
   "CookieChain": {
-    geckoId: null,
+    geckoId: "cookie-2",
     symbol: "COOK",
     cmcId: null,
     twitter: "TheCookieChain",
+    categories: ["SVM"],
     url: "https://www.cookiechain.wtf/",
   },
   "XO": {

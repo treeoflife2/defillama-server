@@ -17508,5 +17508,12 @@
       "decimals": 18,
       "symbol": "USDC.e"
     }
+  },
+  "cookiechain": {
+    "So11111111111111111111111111111111111111112": {
+      "decimals": "9",
+      "symbol": "COOK",
+      "to": "coingecko#cookie-2"
+    }
   }
 }
