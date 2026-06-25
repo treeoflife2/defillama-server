@@ -6032,6 +6032,7 @@ const data6: Protocol[] = [
     chains: ["Sui"],
     module: "waterx/index.js",
     twitter: "WaterX_app",
+    listedAt: 1782420909,
     dimensions: {
       derivatives: "waterx",
     }
