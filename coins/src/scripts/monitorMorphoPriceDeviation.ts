@@ -100,6 +100,7 @@ const ALLOWLIST: Record<string, string> = {
   "999:0xd0ee0cf300dfb598270cd7f4d0c6e0d8f6e13f29": "AVLT — same as ethereum; HyperLiquid OFT deployment, same Altura wind-down + stale NAV oracle",
   "1:0x890a5122aa1da30fec4286de7904ff808f0bd74a": "msY — Main Street Yield collapsed ~85% (2026-06-20, msUSD depeg after Accountable terminated verification); oracle stuck at stale NAV ~$1.06, our CG price reflects real market",
   "1:0xa1150cd4a014e06f5e0a6ec9453fe0208da5adab": "tETH — Terminal WETH, ~29 ETH supply, no on-chain liquidity; our 1:1 ETH redirect vs conservative Morpho oracle",
+  "1:0xddc0f880ff6e4e22e4b74632fbb43ce4df6ccc5a": "reUSDe — our CG price ($1.31) is the DEX market price (Curve/Uniswap, $482K vol); Morpho oracle marks at NAV (~$1.38); $25K supply on Morpho",
 };
 const allowReason = (chainId: number, collateralAddress: string, marketId: string): string | undefined =>
   ALLOWLIST[`${chainId}:${marketId.toLowerCase()}`] ?? ALLOWLIST[`${chainId}:${collateralAddress.toLowerCase()}`];

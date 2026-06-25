@@ -291,6 +291,7 @@ async function getAndStoreCoins(coins: Coin[], rejected: Coin[]) {
               symbol = symbolAndDecimals.symbol;
             }
             if (isNaN(decimals) || decimals == '' || decimals == null) return;
+            if (chain === "stellar" && address.includes("-") && decimals === 0) decimals = 7;
 
             const item = {
               PK: normalizedPK,

@@ -26,7 +26,44 @@ const graphs: { [chain: string]: string } = {
   ),
 };
 
+const apiChains: { [chain: string]: string } = {
+  monad: "MONAD",
+};
+
+const balancerApi = "https://api-v3.balancer.fi/graphql";
+
+async function getPoolIdsFromApi(chain: string): Promise<string[]> {
+  const chainEnum = apiChains[chain];
+  let addresses: string[] = [];
+  let hasMore = true;
+  let skip = 0;
+  const size = 1000;
+
+  do {
+    const lpQuery = `
+    query { poolGetPools(
+        first: ${size}
+        skip: ${skip}
+        orderBy: totalLiquidity
+        orderDirection: desc
+        where: {
+          chainIn: [${chainEnum}]
+          protocolVersionIn: [3]
+        }) {
+        address
+    }}`;
+
+    const { poolGetPools }: any = await request(balancerApi, lpQuery);
+    addresses.push(...poolGetPools.map((p: any) => p.address));
+    hasMore = poolGetPools.length === size;
+    skip += size;
+  } while (hasMore);
+
+  return addresses;
+}
+
 async function getPoolIds3(chain: string): Promise<string[]> {
+  if (apiChains[chain]) return getPoolIdsFromApi(chain);
   if (!graphs[chain]) throw new Error(`no subgraph for ${chain} balancer V3`);
 
   let addresses: string[] = [];
@@ -40,7 +77,7 @@ async function getPoolIds3(chain: string): Promise<string[]> {
         first: 1000
         skip: ${skip}
         orderBy: address
-        orderDirection: desc 
+        orderDirection: desc
         where:{
           isInitialized:true
           isPaused:false
@@ -139,7 +176,8 @@ async function getTokenPrices(
 }
 
 export async function balancerV3(timestamp: number = 0) {
+  const chains = [...Object.keys(graphs), ...Object.keys(apiChains)];
   return Promise.all(
-    Object.keys(graphs).map((chain) => getTokenPrices(chain, timestamp)),
+    chains.map((chain) => getTokenPrices(chain, timestamp)),
   );
 }

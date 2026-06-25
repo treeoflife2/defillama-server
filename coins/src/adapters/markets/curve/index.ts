@@ -117,6 +117,10 @@ export function curve3(timestamp: number = 0) {
       "0x8f63ccd329d4ba07a3c6703d94d3137a9cfbfc6c",
       "0x555aea44f348c4f53a0160335658a8619006c5b0",
       "0x56fc84bfa907b6ced228ed14a8489c88f7f3ec2a",
+      "0xD1b30BA128573fcd7D141C8A987961b40e047BB6",
+      "0x03771e24b7C9172d163Bf447490B142a15be3485",
+      "0x05FA06D4Fb883F67f1cfEA0889edBff9e8358101",
+      "0xd8dD9a8b2AcA88E68c46aF9008259d0EC04b7751",
     ]),
     getGaugePrices("optimism", timestamp),
   ]);
@@ -208,7 +212,10 @@ export function curve14(timestamp: number = 0) {
     getTokenPrices2("fraxtal", [], timestamp, "eth-custom", [
       '0x15d1ed4418da1f268bcad5ba7c8d06bb3c3081ed',
       '0x4cfc391d75c43cf1bdb368e8bf680aed1228df39',
-      '0xee454138083b9b9714cac3c7cf12560248d76d6b'
+      '0xee454138083b9b9714cac3c7cf12560248d76d6b',
+      '0x3a38e9b0B5cB034De01d5298Fc2Ed2D793C0C36F',
+      '0x3df1658e3E76d14eF3C4d410829EA7575bB83B9B',
+      '0xcAEF324bea3Ff5c7a08710081294F3344fFAdC54',
     ]),
   ]);
 }

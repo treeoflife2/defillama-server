@@ -335,6 +335,16 @@
       "symbol": "oUSDT",
       "to": "coingecko#tether"
     },
+    "0x2b269f9deb4804c5a4bd97e4d951c775beaa0cc5": {
+      "decimals": "9",
+      "symbol": "SOL",
+      "to": "coingecko#solana"
+    },
+    "0x76159c2b43ff6f630193e37ec68452169914c1bb": {
+      "decimals": "18",
+      "symbol": "LINK",
+      "to": "coingecko#chainlink"
+    },
     "0x0000000000000000000000000000000000000000": {
       "to": "coingecko#zero-gravity",
       "decimals": 18,
@@ -4567,6 +4577,11 @@
       "to": "coingecko#renzo-restaked-eth",
       "decimals": 18,
       "symbol": "ezETH"
+    },
+    "0xe974b9b31dbff4369b94a1bab5e228f35ed44125": {
+      "to": "coingecko#alchemix",
+      "decimals": 18,
+      "symbol": "ALCX"
     }
   },
   "rsk": {
@@ -5642,6 +5657,21 @@
       "decimals": "18",
       "symbol": "efixDI",
       "to": "asset#polygon:0x04082b283818d9d0dd9ee8742892eee5cc396441"
+    },
+    "0x4154550f4db74dc38d1fe98e1f3f28ed6dad627d": {
+      "to": "coingecko#jarvis-synthetic-euro",
+      "decimals": 18,
+      "symbol": "jEUR"
+    },
+    "0xd3fdcb837dafdb7c9c3ebd48fe22a53f6dd3d7d7": {
+      "to": "coingecko#qi-dao",
+      "decimals": 18,
+      "symbol": "QI"
+    },
+    "0x15d0e0c55a3e7ee67152ad7e89acf164253ff68d": {
+      "to": "coingecko#hyperliquid",
+      "decimals": 18,
+      "symbol": "HYPE"
     }
   },
   "jbc": {
