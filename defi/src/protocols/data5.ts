@@ -1681,14 +1681,14 @@ const data5: Protocol[] = [
   },
   {
     id: "6966",
-    name: "TurboFlow",
+    name: "TurboFlow Perps",
     address: null,
     symbol: "-",
     url: "https://www.turboflow.xyz/",
     description: "TurboFlow is an on-chain trading ecosystem focusing on the convergence of Perpetual Contracts and Prediction Markets. Everyone gets a seat at TurboFlow.",
     chain: "Binance",
-    logo: `${protocolIconsUrl}/turboflow`,
-    audits: "0",
+    logo: `${protocolIconsUrl}/turboflow-perps`,
+    audits: "2",
     gecko_id: null,
     cmcId: null,
     category: "Derivatives",
@@ -1697,7 +1697,10 @@ const data5: Protocol[] = [
     twitter: "TurboFlow_xyz",
     listedAt: 1762370757,
     audit_links: ["https://beosin.com/audits/Turboflow_202510271213.pdf"],
-    deprecated: false
+    parentProtocol: "parent#turboflow",
+    dimensions: {
+      derivatives: "turboflow-perps",
+    }
   },
   {
     id: "6967",

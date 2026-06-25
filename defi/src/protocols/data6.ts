@@ -6937,9 +6937,10 @@ const data6: Protocol[] = [
     cmcId: null,
     category: "Liquid Staking",
     chains: ["Hyperliquid L1"],
-    module: "dummy.js",
+    module: "kinetiq-launch/index.js",
     twitter: "kinetiq_xyz",
     parentProtocol: "parent#kinetiq",
+    listedAt: 1782411305,
     audit_links: [
       "https://kinetiq-cms.vercel.app/api/media/file/launch-june-2026-cantina.pdf",
       "https://kinetiq-cms.vercel.app/api/media/file/launch-may-2026-zerocool.pdf"
@@ -7709,6 +7710,27 @@ const data6: Protocol[] = [
     module: "baked-bazaar/index.js",
     twitter: "bakedbazaarArt",
     listedAt: 1782369546,
+  },
+  {
+    id: "8072",
+    name: "TurboFlow Prediction Markets",
+    address: null,
+    symbol: "-",
+    url: "https://www.turboflow.xyz/",
+    description: "TurboFlow is an on-chain trading ecosystem focusing on the convergence of Perpetual Contracts and Prediction Markets. Everyone gets a seat at TurboFlow.",
+    chain: "Binance",
+    logo: `${protocolIconsUrl}/turboflow-prediction-markets`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Prediction Market",
+    chains: ["Binance", "Solana"],
+    module: "dummy.js",
+    twitter: "TurboFlow_xyz",
+    parentProtocol: "parent#turboflow",
+    dimensions: {
+      dexs: "turboflow-prediction-markets",
+    }
   },
 ];
 export default data6;

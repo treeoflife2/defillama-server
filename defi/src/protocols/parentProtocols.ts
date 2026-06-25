@@ -9965,6 +9965,17 @@ const parentProtocols: IParentProtocol[] = [
     chains: [],
     twitter: "CroviaNFT",
   },
+  {
+    id: "parent#turboflow",
+    name: "TurboFlow",
+    url: "https://www.turboflow.xyz/",
+    description: "TurboFlow is an on-chain trading ecosystem focusing on the convergence of Perpetual Contracts and Prediction Markets. Everyone gets a seat at TurboFlow.",
+    logo: `${protocolIconsUrl}/turboflow`,
+    gecko_id: null,
+    cmcId: null,
+    chains: [],
+    twitter: "TurboFlow_xyz",
+  },
 ];
 
 export default parentProtocols;
