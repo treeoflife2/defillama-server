@@ -5268,7 +5268,8 @@ const data4: Protocol[] = [
     twitter: "unitxyz",
     listedAt: 1739557972,
     dimensions: {
-      fees: "hyperunit"
+      fees: "hyperunit",
+      dexs: "hyperunit",
     }
   },
   {
