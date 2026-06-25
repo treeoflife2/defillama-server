@@ -7519,7 +7519,7 @@ const data4: Protocol[] = [
   },
   {
     id: "5887",
-    name: "Extended",
+    name: "Extended Perps",
     address: null,
     symbol: "-",
     url: "https://app.extended.exchange",
@@ -7527,22 +7527,19 @@ const data4: Protocol[] = [
     description:
       "Extended is a perp DEX, built by ex-Revolut team, on a mission to offer the most extensive product portfolio in DeFi—featuring cross-asset collateral, unified margin, perps, spot, and lending markets.",
     chain: "Ethereum",
-    logo: `${protocolIconsUrl}/extended`,
+    logo: `${protocolIconsUrl}/extended-perps`,
     audits: "0",
     gecko_id: null,
     cmcId: null,
     category: "Derivatives",
     chains: ["Ethereum", "Starknet"],
     oraclesBreakdown: [
-      {
-        name: "Stork",
-        type: "Primary",
-        proof: ["https://docs.extended.exchange/extended-resources/trading/oracle-prices"],
-      },
+      {name: "Stork",type: "Primary",proof: ["https://docs.extended.exchange/extended-resources/trading/oracle-prices"],},
     ],
     module: "extended/index.js",
     twitter: "extendedapp",
     listedAt: 1741703740,
+    parentProtocol: "parent#extended",
     dimensions: {
       fees: "extended",
       derivatives: "extended",

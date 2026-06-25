@@ -9976,6 +9976,18 @@ const parentProtocols: IParentProtocol[] = [
     chains: [],
     twitter: "TurboFlow_xyz",
   },
+  {
+    id: "parent#extended",
+    name: "Extended",
+    url: "https://app.extended.exchange",
+    referralUrl: "https://app.extended.exchange/join/LLAMAS123",
+    description: "Extended is a perp DEX, built by ex-Revolut team, on a mission to offer the most extensive product portfolio in DeFi—featuring cross-asset collateral, unified margin, perps, spot, and lending markets.",
+    logo: `${protocolIconsUrl}/extended`,
+    gecko_id: null,
+    cmcId: null,
+    chains: [],
+    twitter: "extendedapp",
+  },
 ];
 
 export default parentProtocols;

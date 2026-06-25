@@ -17015,8 +17015,8 @@ const data5: Protocol[] = [
   {
     id: "7668",
     name: "Jupiterz",
-    address: null,
-    symbol: "-",
+    address: "solana:JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+    symbol: "JUP",
     url: "https://jupiterz.jup.ag/",
     description: "Jupiterz is a RFQ on Solana.",
     chain: "Solana",
