@@ -6030,7 +6030,7 @@ const data6: Protocol[] = [
     cmcId: null,
     category: "Derivatives",
     chains: ["Sui"],
-    module: "dummy.js",
+    module: "waterx/index.js",
     twitter: "WaterX_app",
     dimensions: {
       derivatives: "waterx",
