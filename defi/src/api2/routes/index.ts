@@ -30,6 +30,8 @@ import { reportError } from "../../reportError";
 import { reportError as reportSupport } from "../../reportSupport";
 import { saveBlacklistPemrit } from "../../dexAggregators/db/saveBlacklistPemrit";
 import { chainChartFileResponse } from "./chainRouteAliases";
+import nftParentCompanies from "../../nfts/output/parentCompanies.json";
+import opExpenses from "../../operationalCosts/output/expenses.json";
 
 export default function setRoutes(router: HyperExpress.Router, routerBasePath: string) {
   // todo add logging middleware to all routes
@@ -123,6 +125,9 @@ export default function setRoutes(router: HyperExpress.Router, routerBasePath: s
   router.get("/overview/_internal/dimensions-metadata", ew(getDimensionsMetadataRoute))
   router.get("/overview/_internal/chain-name-id-map", async (_req: HyperExpress.Request, res: HyperExpress.Response) => successResponse(res, chainNameToIdMap, 60))
   router.get("/overview/_internal/chain-name-id-map-v2", async (_req: HyperExpress.Request, res: HyperExpress.Response) => successResponse(res, { chainKeyToChainLabelMap, chainLabelsToKeyMap }, 60))
+  
+  router.get('/_internal/nfts/parent-companies', async (_req: HyperExpress.Request, res: HyperExpress.Response) => successResponse(res, nftParentCompanies, 60))
+  router.get('/_internal/operational-costs/expenses', async (_req: HyperExpress.Request, res: HyperExpress.Response) => successResponse(res, opExpenses, 60))
 
 
   router.get("/_fe/static/*", defaultFileHandler)
