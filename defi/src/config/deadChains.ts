@@ -39,6 +39,8 @@ export const deadChains = [
   'godwoken_v1', // chain sunset 2026-01-06 https://sunset.forcebridge.com/announcement
   // 'fantom', // chain sunset 2026-06-30: https://x.com/SonicLabs/status/2041551455254097988
   // 'btnx', // shutdown 2026-07-09: https://x.com/botanix/status/2064420116578590941
+  // 'polygon_zkevm', // shutdown 2026-07-01: https://forum.polygon.technology/t/polygon-zkevm-mainnet-beta-sunset-claim-your-funds/21856
+  // 'sophon', // shutdown 2026-12-30: https://x.com/Sophon/status/2070192257295335800
 ]
 
 
