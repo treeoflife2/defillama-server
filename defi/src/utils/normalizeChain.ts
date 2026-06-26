@@ -2202,6 +2202,9 @@ export const chainCoingeckoIds = {
     categories: ["EVM", "Bitcoin Sidechains"],
     twitter: "Coredao_Org",
     url: "https://coredao.org/",
+    dimensions: {
+      fees: "core",
+    },
   },
   "Rangers": {
     geckoId: "rangers-protocol-gas",

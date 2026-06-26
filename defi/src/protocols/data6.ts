@@ -1783,6 +1783,7 @@ const data6: Protocol[] = [
     twitter: "Plasma",
     dimensions: {
       fees: "plasma-one",
+      dexs: "plasma-one",
     },
   },
   {
@@ -8273,6 +8274,28 @@ const data6: Protocol[] = [
     dimensions: {
       fees: "defiapp-perps",
       derivatives: "defiapp-perps",
+    }
+  },
+  {
+    id: "8099",
+    name: "flooor.fun",
+    address: null,
+    symbol: "-",
+    url: "https://flooor.fun/",
+    description: "NFT auction platform on Base chain.",
+    chain: "Base",
+    logo: `${protocolIconsUrl}/flooor.fun`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "NFT Marketplace",
+    chains: ["Base"],
+    module: "flooor-fun/index.js",
+    twitter: "vrnouns",
+    listedAt: 1782502704,
+    dimensions: {
+      dexs: "flooor-fun",
+      fees: "flooor-fun",
     }
   },
 ];
