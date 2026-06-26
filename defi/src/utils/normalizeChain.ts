@@ -1840,6 +1840,12 @@ export const chainCoingeckoIds = {
     chainId: 42170,
     twitter: "arbitrum",
     url: "https://arbitrum.io/",
+    warningBanners: [
+      {
+        message:"The Arbitrum DAO has passed a proposal to move Arbitrum Nova into a minimization phase. Users and dApps are being asked to migrate to Arbitrum One by September 2nd, after which Arbitrum Nova transitions to a minimized state with reduced SLAs.",
+        level: "alert",
+      },
+    ],
     dimensions: {
       fees: "arbitrum-nova",
     },
