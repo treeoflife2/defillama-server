@@ -4543,14 +4543,14 @@ export const chainCoingeckoIds = {
       fees: "unichain",
     },
   },
-  "Story": {
+  "Data Network": { // rebranded from Story Network
     geckoId: "story-2",
-    symbol: "IP",
+    symbol: "DATA",
     cmcId: "35626",
     categories: ["EVM"],
     chainId: 1514,
-    twitter: "StoryProtocol",
-    url: "https://www.story.foundation/",
+    twitter: "datafdn",
+    url: "https://www.datafdn.org/",
     dimensions: {
       fees: "story",
     },
@@ -6574,6 +6574,7 @@ const newChainLabelMap = {
   "area": "Areum Network",
   "dango": "Dango Mainnet",
   "aleo": "ALEO",
+  "sty": "Data Network",
   //"space_and_time": "SXT Chain",
 } as { [key: string]: string }
 
