@@ -662,7 +662,7 @@ const data5: Protocol[] = [
   },
   {
     id: "6922",
-    name: "fomo",
+    name: "fomo Solana",
     address: null,
     symbol: "-",
     url: "https://fomo.family",
@@ -670,14 +670,15 @@ const data5: Protocol[] = [
     description:
       "Fomo is a social trading app that enables self-custodial, gasless token swaps on mobile, combining social feeds and copy-trading features.",
     chain: "Solana",
-    logo: `${protocolIconsUrl}/fomo`,
+    logo: `${protocolIconsUrl}/fomo-solana`,
     audits: "0",
     gecko_id: null,
     cmcId: null,
     category: "Trading App",
     chains: ["Solana"],
     module: "dummy.js",
-    twitter: "tryfomo",
+    twitter: "fomo",
+    parentProtocol: "parent#fomo",
     dimensions: {
       fees: "fomo",
       dexs: "fomo",

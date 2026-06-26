@@ -9999,6 +9999,29 @@ const parentProtocols: IParentProtocol[] = [
     chains: [],
     twitter: "EVplusAI",
   },
+  {
+    id: "parent#fomo",
+    name: "fomo",
+    url: "https://fomo.family",
+    referralUrl: "https://fomo.family/r/llamas",
+    description: "Fomo is a social trading app that enables self-custodial, gasless token swaps on mobile, combining social feeds and copy-trading features.",
+    logo: `${protocolIconsUrl}/fomo`,
+    gecko_id: null,
+    cmcId: null,
+    chains: [],
+    twitter: "fomo",
+  },
+  {
+    id: "parent#defi-app",
+    name: "Defi App",
+    url: "https://app.defi.app/",
+    description: `The “SuperDapp” that will make CEXs obsolete. With DefiApp retail users can swap into any asset on any chain, access DeFi's best yields, trade with leverage, farm points from the latest protocols, and easily on-and-off ramp`,
+    logo: `${protocolIconsUrl}/defi-app`,
+    gecko_id: "home",
+    cmcId: "36133",
+    chains: [],
+    twitter: "defiapp",
+  },
 ];
 
 export default parentProtocols;
