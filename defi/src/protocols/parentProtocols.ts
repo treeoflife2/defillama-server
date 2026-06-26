@@ -9988,6 +9988,17 @@ const parentProtocols: IParentProtocol[] = [
     chains: [],
     twitter: "extendedapp",
   },
+  {
+    id: "parent#evplusai",
+    name: "EVplusAI",
+    url: "https://www.evplus.ai/",
+    description: "Prediction market and perps trading.",
+    logo: `${protocolIconsUrl}/evplusai`,
+    gecko_id: null,
+    cmcId: null,
+    chains: [],
+    twitter: "EVplusAI",
+  },
 ];
 
 export default parentProtocols;
