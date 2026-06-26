@@ -9499,14 +9499,15 @@ The eWIT token is a custodial, wrapped version of the Witnet coin managed by the
   },
   {
     id: "533",
-    name: "OpenOcean",
+    name: "De1",
+    previousNames: ["OpenOcean"],
     address: "bsc:0x8ea5219a16c2dbf1d6335a6aa0c6bd45c50347c5",
     symbol: "OOE",
-    url: "https://openocean.finance",
+    url: "https://deluthium.ai/",
     description:
-      "OpenOcean is the world’s leading DeFi trading aggregator, offering a full suite of trading tools and a powerful API. With the deepest liquidity across 40+ chains, from EVM-compatible to non-EVM chains like Solana, OpenOcean enables seamless swaps with optimal prices for users worldwide.",
+      "De1 is a leading academic and research-driven financial infrastructure initiative dedicated to building fair, efficient, and native global financial systems for the emerging era where humans and autonomous agents coexist at scale.",
     chain: "Binance",
-    logo: `${protocolIconsUrl}/openocean`,
+    logo: `${protocolIconsUrl}/de1`,
     audits: "2",
     gecko_id: "openocean",
     cmcId: "9938",
@@ -9514,7 +9515,7 @@ The eWIT token is a custodial, wrapped version of the Witnet coin managed by the
     chains: ["Binance"],
     module: "openocean.js",
     treasury: "open-oceans.js",
-    twitter: "OpenOceanGlobal",
+    twitter: "Deluthium",
     audit_links: ["https://docs.openocean.finance/protocol/introduction/security-and-audits"],
     github: ["openocean-finance"],
     dimensions: {
