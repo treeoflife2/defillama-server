@@ -1,4 +1,5 @@
 import { DimensionsConfig } from "../adaptors/data/types";
+import { Banner } from "../protocols/types";
 import { sluggifyString } from "./sluggify";
 
 export const normalizedChainReplacements = {
@@ -84,6 +85,7 @@ export type ChainCoinGekcoId = {
   },
   dimensions?: DimensionsConfig
   stablecoins?: string[]
+  warningBanners?: Array<Banner>;
 }
 
 export type ChainCoinGekcoIds = {
@@ -5817,7 +5819,7 @@ export const chainCoingeckoIds = {
     twitter: "OpenledgerHQ",
     url: "https://www.openledger.xyz/",
   },
-    "N1": {
+  "N1": {
     geckoId: null,
     symbol: null,
     cmcId: null,
@@ -6692,10 +6694,10 @@ addChainLabelMapping(chainLabelMap)
 addChainLabelMapping(newChainLabelMap)
 
 Object.entries(chainLabelsToKeyMap).forEach(([label, key]) => {
-    const sluggifiedLabel = sluggifyString(label)
+  const sluggifiedLabel = sluggifyString(label)
 
-    _chainLabelToChainIdCache[label] = key
-    _chainLabelToChainIdCache[sluggifiedLabel] = key
+  _chainLabelToChainIdCache[label] = key
+  _chainLabelToChainIdCache[sluggifiedLabel] = key
 })
 
 // add the auto derived chain keys from all known chain labels
