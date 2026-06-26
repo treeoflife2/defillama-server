@@ -37,6 +37,7 @@ export const deadChains = [
   'dchainmainnet', // saga rollup torn down, RPC returns "default backend - 404"
   'godwoken', // chain sunset 2026-01-06 https://sunset.forcebridge.com/announcement
   'godwoken_v1', // chain sunset 2026-01-06 https://sunset.forcebridge.com/announcement
+  'swellchain', // chain sunset 2026-06-23 https://x.com/swellnetworkio/status/2067031459731570952
   // 'fantom', // chain sunset 2026-06-30: https://x.com/SonicLabs/status/2041551455254097988
   // 'btnx', // shutdown 2026-07-09: https://x.com/botanix/status/2064420116578590941
   // 'polygon_zkevm', // shutdown 2026-07-01: https://forum.polygon.technology/t/polygon-zkevm-mainnet-beta-sunset-claim-your-funds/21856
