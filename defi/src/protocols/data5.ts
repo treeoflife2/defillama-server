@@ -5573,7 +5573,10 @@ const data5: Protocol[] = [
     audit_links: ["https://github.com/Zellic/publications/blob/master/Tristero%20-%20Zellic%20Audit%20Report.pdf"],
     parentProtocol: "parent#tristero",
     dimensions: {
-      dexs: "tristero",
+      dexs: {
+        adapter: "tristero",
+        genuineSpikes: [["2026-06-22", "Large volume of USDT <> USDS swaps on base"]]
+      }
     },
   },
   {
