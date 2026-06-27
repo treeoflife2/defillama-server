@@ -8353,7 +8353,7 @@ const data6: Protocol[] = [
     twitter: "Outcomexyz",
     dimensions: {
       fees: "outcome-xyz",
-      derivatives: "outcome-xyz",
+      dexs: "outcome-xyz",
     }
   },
   {
