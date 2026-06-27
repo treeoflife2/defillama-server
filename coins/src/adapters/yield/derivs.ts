@@ -1049,6 +1049,28 @@ export const configs: { [adapter: string]: Config } = {
     decimals: 6,
     confidence: 1,
   },
+  // OpenEden's tokenized BNY Mellon Global Short-Dated High Yield Bond Fund.
+  // Priced off OpenEden's own PriceOracle (latestRoundData, USD, 8 decimals).
+  // No `underlying` -> getWrites uses $1, so price = the NAV (sits above $1).
+  // BSC has its own oracle/token but reports the same fund NAV, so the BSC
+  // address redirects to this canonical eth record via tokenMapping.json.
+  // ~100h staleness window: a bond-fund NAV only posts on business days.
+  HYBOND: {
+    rate: async ({ api }) => {
+      const rate = await api.call({
+        abi: "function latestRoundData() view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)",
+        target: "0x74995e6133062Aee330653c618E39F34016D6F39",
+      });
+      if (rate.updatedAt < api.timestamp - NAV_ORACLE_MAX_AGE_SECONDS)
+        throw new Error(`HYBOND stale rate`);
+      return rate.answer / 1e8;
+    },
+    chain: "ethereum",
+    address: "0x1204371AC0e5176f4B8c5B2F16C2Bec551b6FC1a",
+    symbol: "HYBOND",
+    decimals: 18,
+    confidence: 1,
+  },
 };
 
 export async function derivs(timestamp: number) {

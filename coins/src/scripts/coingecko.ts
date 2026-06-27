@@ -291,6 +291,8 @@ async function getAndStoreCoins(coins: Coin[], rejected: Coin[]) {
               symbol = symbolAndDecimals.symbol;
             }
             if (isNaN(decimals) || decimals == '' || decimals == null) return;
+            
+            // coingecko 0 decimals should be reassigned to 7
             if (chain === "stellar" && address.includes("-") && decimals === 0) decimals = 7;
 
             const item = {

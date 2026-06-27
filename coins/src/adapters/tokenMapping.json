@@ -2804,6 +2804,11 @@
       "symbol": "AID",
       "to": "asset#ethereum:0x18f52b3fb465118731d9e0d276d4eb3599d57596"
     },
+    "0xb613ab1be4039a7d799ad968ba9e425b6bff4224": {
+      "decimals": "18",
+      "symbol": "HYBOND",
+      "to": "asset#ethereum:0x1204371ac0e5176f4b8c5b2f16c2bec551b6fc1a"
+    },
     "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9": {
       "decimals": "18",
       "symbol": "TBILL",

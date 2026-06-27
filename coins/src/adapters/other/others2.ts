@@ -91,6 +91,13 @@ async function feUBTC(timestamp: number = 0) {
   const wHLPRate = (await api.call({ abi: "uint256:getRate", target: '0x470bd109a24f608590d85fc1f5a4b6e625e8bdff' })) / 1e18;
   pricesObject[wHLP] = { price: wHLPRate * 1e12, confidence: 1 };
 
+  // beHYPE — staked HYPE; price at the on-chain redeemable rate (oracle.lastAnswer, 8dec = HYPE per beHYPE)
+  // × HYPE, same NAV the Morpho oracle uses. confidence 1 to override the thin coingecko 'behype' market mark
+  // (same gate/one-time updateCoinFields redirect clear as wHLP above).
+  const beHYPE = "0xd8FC8F0b03eBA61F64D08B0bef69d80916E5DdA9";
+  const beHYPERate = (await api.call({ abi: "uint256:lastAnswer", target: "0x1ceab703956e24b18a0af6b272e0bf3f499aca0f" })) / 1e8;
+  pricesObject[beHYPE] = { price: beHYPERate, underlying: "0x5555555555555555555555555555555555555555", confidence: 1 };
+
   return getWrites({ chain, timestamp, pricesObject, projectName: "other2", });
 }
 
