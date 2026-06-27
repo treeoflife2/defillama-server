@@ -11648,7 +11648,7 @@ const data5: Protocol[] = [
     symbol: "-",
     url: "https://predmart.com",
     description:
-      "Prediction market on Base chain focused on niche markets with clear resolution rules. Like Polymarket, but for markets the big platforms ignore.",
+      "PredMart is the margin account for Polymarket — trade prediction markets with up to 5x leverage in one click, or unlock USDC from Polymarket outcome shares you already hold without selling. It's a non-custodial lending protocol on Polygon: borrowers post Polymarket shares (ERC-1155 outcome tokens) as collateral to borrow USDC and open leveraged positions on any market, while lenders supply USDC to the pool and earn yield on otherwise idle capital.",
     chain: "Base",
     logo: `${protocolIconsUrl}/predmart`,
     audits: "0",
