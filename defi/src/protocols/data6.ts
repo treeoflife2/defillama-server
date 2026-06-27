@@ -4668,7 +4668,9 @@ const data6: Protocol[] = [
       dexs: {
         genuineSpikes: [["2026-06-12", "Protocol launch ramp-up, API returns $0 for pre-June-2026 dates"]],
         adapter: "archer-exchange",
-      }
+      },
+      "active-users": "archer-exchange",
+      "new-users": "archer-exchange",
     }
   },
   {

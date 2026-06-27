@@ -13537,7 +13537,7 @@ const data3_0: Protocol[] = [
           ["2025-12-09", "$RAIN token unlock"], 
           ["2026-02-16", "$RAIN token unlock"], 
           ["2026-05-26", "$RAIN token unlock"], 
-          ["2026-06-25", "$H(Humanity) token unlock"], 
+          ["2026-06-25", "$RAIN token unlock and $H(Humanity) token unlock"], 
         ],
       }
     }
