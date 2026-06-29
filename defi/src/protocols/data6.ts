@@ -8511,5 +8511,25 @@ const data6: Protocol[] = [
       fees: "xoxno-lending",
     }
   },
+  {
+    id: "8110",
+    name: "Arcis Protocol",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://arcis.money/
+    description:
+      "Financial infrastructure for autonomous AI agents. ERC-4626 yield vaults, identity-aware credit lines, and revenue bonds accessible through the Agent Treasury Interface (ATI)",
+    chain: "Base",
+    logo: `${protocolIconsUrl}/arcis-protocol`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Yield",
+    chains: ["Base"],
+    module: "arcis/index.js",
+    twitter: "ArcisProtocol",
+    github: ["Arcis-Protocol"],
+    listedAt: 1782758083,
+  },
 ];
 export default data6;
