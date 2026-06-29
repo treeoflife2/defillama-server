@@ -561,6 +561,34 @@ export function processRecordsToPGCache(records: any[]): PGCacheData {
   return data;
 }
 
+// Drop any prior live tip (non-midnight rows) so the daily backbone stays clean and idempotent.
+export function stripPGCacheTips(data: PGCacheData | null): PGCacheData {
+  const out: PGCacheData = {};
+  if (!data) return out;
+  for (const ts of Object.keys(data)) {
+    const t = Number(ts);
+    if (t === getTimestampAtStartOfDay(t)) out[t] = data[t];
+  }
+  return out;
+}
+
+// Append the latest hourly row as a live tip so the chart's right edge tracks the current value, not the 00:00 row.
+export function appendPGCacheTip(data: PGCacheData, tip: ChartTipRow | undefined): PGCacheData {
+  if (!tip) return data;
+  const tipRecord = processRecordsToPGCache([{
+    timestamp: tip.timestamp,
+    mcap: tip.mcap,
+    activemcap: tip.activemcap,
+    defiactivetvl: tip.defiactivetvl,
+    totalsupply: tip.totalsupply,
+  }])[tip.timestamp];
+  if (!tipRecord) return data;
+  const lastTs = Object.keys(data).reduce((max, ts) => Math.max(max, Number(ts)), 0);
+  if (tip.timestamp <= lastTs) return data;
+  data[tip.timestamp] = tipRecord;
+  return data;
+}
+
 // Pre-compute the daily net-flow series for one id from already-fetched
 // chain-level daily records. Mirrors the logic the /flows/:id route used to
 // run on every request.
@@ -662,16 +690,14 @@ async function generatePGCache(): Promise<{ updatedIds: number }> {
   const repairEvents: PGCacheRepairEvent[] = [];
   const processingErrors: PGCacheProcessingError[] = [];
 
+  // Latest hourly row per id, appended below as a live chart tip (fetched once).
+  const latestHourlyTips = await fetchLatestHourlyForChartTipsPG();
+
   if (lastSyncTimestamp) {
     // Incremental sync: fetch only updated records
     console.log(`Incremental PG cache sync: fetching records updated after ${lastSyncTimestamp.toISOString()}`);
     const records = await fetchDailyRecordsWithChainsPG(lastSyncTimestamp);
     console.log(`Fetched ${records.length} updated records for PG cache`);
-
-    if (records.length === 0) {
-      console.log('No new records for PG cache');
-      return { updatedIds: 0 };
-    }
 
     // Group by ID
     const recordsById: { [id: string]: any[] } = {};
@@ -680,10 +706,29 @@ async function generatePGCache(): Promise<{ updatedIds: number }> {
       recordsById[record.id].push(record);
     });
 
-    for (const [id, idRecords] of Object.entries(recordsById)) {
-      const existingCache = await readPGCacheForId(id);
+    // Union of ids with new daily rows + ids with a tip, so tips refresh even when the daily row didn't change.
+    const ids = Array.from(new Set([...Object.keys(recordsById), ...Object.keys(latestHourlyTips)]));
+    if (ids.length === 0) {
+      console.log('No new records or tips for PG cache');
+      return { updatedIds: 0 };
+    }
+
+    for (const id of ids) {
+      const idRecords = recordsById[id] ?? [];
+      const tip = latestHourlyTips[id];
+      const existingRaw = await readPGCacheForId(id);
+      const existingCache = stripPGCacheTips(existingRaw);
       const existingRows = getPGCacheRowCount(existingCache);
-      const shouldRebuild = !existingCache || existingRows < MIN_PG_CACHE_ROWS_FOR_INCREMENTAL_REUSE;
+
+      if (idRecords.length === 0) {
+        // Tip-only refresh: daily backbone unchanged, just re-tip (flows unchanged).
+        if (existingRows === 0) continue;
+        await storePGCacheForId(id, appendPGCacheTip(existingCache, tip));
+        updatedIds++;
+        continue;
+      }
+
+      const shouldRebuild = !existingRaw || existingRows < MIN_PG_CACHE_ROWS_FOR_INCREMENTAL_REUSE;
       const newData = processRecordsToPGCache(idRecords);
       const incrementallyMerged = mergePGCacheData(existingCache, newData);
       const incrementallyMergedRows = getPGCacheRowCount(incrementallyMerged);
@@ -693,12 +738,12 @@ async function generatePGCache(): Promise<{ updatedIds: number }> {
       if (shouldRebuild) {
         const fullData = processRecordsToPGCache(fullRecords);
         const rebuiltRows = getPGCacheRowCount(fullData);
-        await storePGCacheForId(id, smoothPGCacheData(fullData));
+        await storePGCacheForId(id, appendPGCacheTip(smoothPGCacheData(fullData), tip));
 
         if (rebuiltRows > incrementallyMergedRows) {
           repairEvents.push({
             id,
-            reason: existingCache ? 'suspiciously small existing pg-cache' : 'missing existing pg-cache',
+            reason: existingRaw ? 'suspiciously small existing pg-cache' : 'missing existing pg-cache',
             existingRows,
             rebuiltRows,
             incrementalRows: incrementallyMergedRows,
@@ -706,7 +751,7 @@ async function generatePGCache(): Promise<{ updatedIds: number }> {
           });
         }
       } else {
-        await storePGCacheForId(id, smoothPGCacheData(incrementallyMerged));
+        await storePGCacheForId(id, appendPGCacheTip(smoothPGCacheData(incrementallyMerged), tip));
       }
       await storeFlowsForIdFromChainRecords(id, fullRecords);
       updatedIds++;
@@ -724,7 +769,7 @@ async function generatePGCache(): Promise<{ updatedIds: number }> {
         if (records.length === 0) continue;
 
         const data = processRecordsToPGCache(records);
-        await storePGCacheForId(id, smoothPGCacheData(data));
+        await storePGCacheForId(id, appendPGCacheTip(smoothPGCacheData(data), latestHourlyTips[id]));
         await storeFlowsForIdFromChainRecords(id, records);
         updatedIds++;
 
@@ -1304,8 +1349,10 @@ export async function generateAggregatedHistoricalCharts(metadata: RWAMetadata[]
     const canonicalMarketId = m.data.canonicalMarketId;
     if (!canonicalMarketId) continue;
 
-    const pgCache = await readPGCacheForId(m.id);
-    if (!pgCache) continue;
+    // Strip tips: aggregates bucket by exact timestamp, so intraday tips would fragment the tail.
+    const pgCacheRaw = await readPGCacheForId(m.id);
+    if (!pgCacheRaw) continue;
+    const pgCache = stripPGCacheTips(pgCacheRaw);
 
     const categories = Array.isArray(m.data.category) ? m.data.category.filter(Boolean) : [];
     const primaryCategory = categories[0];
@@ -1810,11 +1857,7 @@ async function main() {
     const list = generateList(currentData, stats);
     await storeRouteData('list.json', list);
 
-    // Generate historical data incrementally
-    const { updatedIds, totalRecords } = await generateAllHistoricalDataIncremental(metadata);
-    console.log(`Historical data: updated ${updatedIds} IDs with ${totalRecords} records`);
-
-    // Generate PG cache with chain breakdown
+    // PG cache (chain breakdown) now also appends the live hourly tip; replaces the old historical pass no route served.
     await generatePGCache();
 
     // Generate aggregated historical charts by chain, category, platform

@@ -38,7 +38,25 @@ jest.mock('../protocols/parentProtocols', () => ({ parentProtocolsById: {} }));
 jest.mock('../protocols/data', () => ({ protocolsById: {} }));
 
 import { readPGCacheForId, storeRouteData, storeRouteDataWithWriter } from './file-cache';
-import { generateAggregatedHistoricalCharts } from './cron';
+import { generateAggregatedHistoricalCharts, appendPGCacheTip, stripPGCacheTips } from './cron';
+
+// One UTC day in seconds; daily PG-cache rows are always start-of-day aligned.
+const DAY = 86400;
+const D0 = 1699920000; // 2023-11-14 00:00 UTC
+
+function makeTip(timestamp: number, mcap: Record<string, number>): any {
+  return {
+    id: 'hybond',
+    timestamp,
+    mcap,
+    activemcap: mcap,
+    defiactivetvl: {},
+    totalsupply: {},
+    aggregatemcap: Object.values(mcap).reduce((a, b) => a + b, 0),
+    aggregatedactivemcap: Object.values(mcap).reduce((a, b) => a + b, 0),
+    aggregatedefiactivetvl: 0,
+  };
+}
 
 // Asset-breakdown files are written via the streaming `storeRouteDataWithWriter`
 // (chunked JSON) rather than `storeRouteData`. Reconstruct each file by re-running
@@ -60,7 +78,7 @@ describe('generateAggregatedHistoricalCharts', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (readPGCacheForId as jest.Mock).mockImplementation(async (id: string) => ({
-      1700000000: {
+      1699920000: {
         onChainMcap: id === 'alpha' ? 100 : 30,
         activeMcap: id === 'alpha' ? 80 : 20,
         defiActiveTvl: id === 'alpha' ? 5 : 2,
@@ -103,9 +121,46 @@ describe('generateAggregatedHistoricalCharts', () => {
     expect(storedByPath.has('charts/category/treasury-bills.json')).toBe(true);
     expect(storedByPath.has('charts/category/private-credit.json')).toBe(true);
     expect(storedByPath.get('charts/category-asset-breakdown/other-rwas.json')).toEqual({
-      onChainMcap: [{ timestamp: 1700000000, 'alpha-market': 100 }],
-      activeMcap: [{ timestamp: 1700000000, 'alpha-market': 80 }],
-      defiActiveTvl: [{ timestamp: 1700000000, 'alpha-market': 5 }],
+      onChainMcap: [{ timestamp: 1699920000, 'alpha-market': 100 }],
+      activeMcap: [{ timestamp: 1699920000, 'alpha-market': 80 }],
+      defiActiveTvl: [{ timestamp: 1699920000, 'alpha-market': 5 }],
     });
+  });
+});
+
+describe('PG cache live tip', () => {
+  // HYBOND-shaped backbone: a few days flat at ~20k, then a large same-day mint.
+  const daily = () => ({
+    [D0]: { onChainMcap: 20005, activeMcap: 20005, defiActiveTvl: 0, totalSupply: 11560, chains: { Ethereum: { onChainMcap: 14226, activeMcap: 14226, defiActiveTvl: 0, totalSupply: 5783 } } },
+    [D0 + DAY]: { onChainMcap: 20012, activeMcap: 20012, defiActiveTvl: 0, totalSupply: 11562, chains: { Ethereum: { onChainMcap: 14233, activeMcap: 14233, defiActiveTvl: 0, totalSupply: 5783 } } },
+  });
+
+  it('appends the hourly tip as a fresh rightmost point with the per-chain breakdown', () => {
+    const tipTs = D0 + DAY + 12345; // intraday, after the latest 00:00 row
+    const out = appendPGCacheTip(daily(), makeTip(tipTs, { Ethereum: 1607342, BSC: 10003 }));
+
+    expect(Object.keys(out).map(Number).sort((a, b) => a - b)).toEqual([D0, D0 + DAY, tipTs]);
+    expect(out[tipTs].onChainMcap).toBe(1617345);
+    expect(out[tipTs].chains.Ethereum.onChainMcap).toBe(1607342);
+    expect(out[tipTs].chains.BSC.onChainMcap).toBe(10003);
+    // The 00:00 row for the same day is kept (so /flows ?withMcap still resolves).
+    expect(out[D0 + DAY].onChainMcap).toBe(20012);
+  });
+
+  it('does not append a tip that is not newer than the last daily point', () => {
+    const out = appendPGCacheTip(daily(), makeTip(D0 + DAY, { Ethereum: 99 }));
+    expect(Object.keys(out).map(Number).sort((a, b) => a - b)).toEqual([D0, D0 + DAY]);
+  });
+
+  it('is a no-op when there is no tip', () => {
+    expect(appendPGCacheTip(daily(), undefined)).toEqual(daily());
+  });
+
+  it('stripPGCacheTips removes the intraday tip and is idempotent', () => {
+    const tipTs = D0 + DAY + 12345;
+    const tipped = appendPGCacheTip(daily(), makeTip(tipTs, { Ethereum: 1607342 }));
+    const stripped = stripPGCacheTips(tipped);
+    expect(stripped).toEqual(daily());
+    expect(stripPGCacheTips(stripped)).toEqual(daily());
   });
 });
