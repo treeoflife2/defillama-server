@@ -3386,6 +3386,9 @@ export const chainCoingeckoIds = {
     categories: ["EVM", "Bitcoin Sidechains"],
     twitter: "BSquaredNetwork",
     url: "https://www.bsquared.network/",
+    dimensions: {
+      fees: "bsquared",
+    },
   },
   "Derive Chain": {
     // rebrand from Lyra
