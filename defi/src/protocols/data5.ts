@@ -3486,7 +3486,7 @@ const data5: Protocol[] = [
     symbol: "-",
     url: "https://kaching.vip",
     description:
-      "Kaching! is an on-chain lottery on Aptos that uses AIP-79 randomness to provide transparent, trustless, and verifiably fair ticket purchases, draws, and payouts.",
+      "Kaching! is an on-chain lottery built on Solana, leveraging smart contracts to ensure transparent, trustless ticket purchases and payouts, while utilizing Switchboard VRF to guarantee verifiably fair and tamper-proof draws",
     chain: "Solana",
     logo: `${protocolIconsUrl}/kaching`,
     audits: "2",
