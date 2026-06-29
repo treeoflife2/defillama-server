@@ -8467,5 +8467,49 @@ const data6: Protocol[] = [
       dexs: "hyperlynx-v3",
     }
   },
+  {
+    id: "8108",
+    name: "Rubin Perps",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://rubin.trade
+    description:
+      "Rubin is a self-custody decentralized perpetual & spot exchange",
+    chain: "Rubin",
+    logo: `${protocolIconsUrl}/rubin-perps`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Derivatives",
+    chains: ["Rubin"],
+    module: "dummy.js",
+    twitter: null,
+    dimensions: {
+      derivatives: "rubin",
+      "open-interest": "rubin",
+    }
+  },
+  {
+    id: "8109",
+    name: "XOXNO Lending",
+    address: "elrond:XOXNO-c1293a",
+    symbol: "XOXNO",
+    url: "https://xoxno.com",
+    description:
+      "XOXNO Stellar Lending is an overcollateralized lending protocol on Stellar",
+    chain: "Stellar",
+    logo: `${protocolIconsUrl}/xoxno-lending`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Lending",
+    chains: ["Stellar"],
+    module: "dummy.js",
+    twitter: "XoxnoNetwork",
+    parentProtocol: "parent#xoxno",
+    dimensions: {
+      fees: "xoxno-lending",
+    }
+  },
 ];
 export default data6;

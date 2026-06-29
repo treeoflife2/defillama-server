@@ -6269,6 +6269,12 @@ export const chainCoingeckoIds = {
     twitter: "AFX_XYZ",
     url: "https://app.afx.xyz/trade",
   },
+  "Rubin": {
+    geckoId: null,
+    symbol: null,
+    cmcId: null,
+    categories: ["Cosmos"],
+  },
 } as unknown as ChainCoinGekcoIds;
 
 // We are creating the list here because, later in the code, we include historical chain labels with the same chain metadata, so, chainCoingeckoIds will have duplicate keys
