@@ -7330,7 +7330,7 @@ const data6: Protocol[] = [
     name: "XAX",
     address: null,
     symbol: "-",
-    url: " ", // pending to add url https://app.xax.trading/
+    url: "https://app.xax.trading/",
     description: "Institutional-grade Vault operated by delta neutral strategy",
     chain: "Ethereum",
     logo: `${protocolIconsUrl}/xax`,
