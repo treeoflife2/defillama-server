@@ -19,6 +19,7 @@ export const cgIdDenylist = new Set<string>([
   'wrapped-one',         // WONE — stale/abandoned CG listing marks ~$0.20 (~135× real ONE) on ~$23k vol; the Harmony WONE contract is the real ONE, redirect to coingecko#harmony via tokenMapping_added.json. CG slot shadowing the redirect inflates Harmony chain TVL ~$0.25M→~$25M (sawtooth since Nov 2025).
   'staked-yearn-crv-vault', // st-yCRV — CG marks it off CRV instead of the discounted yCRV peg (~38% high, $0.54 vs ~$0.34); priced by yearnV2 (cgKeyOverrides: pricePerShare × yCRV) written directly to this cg key.
   'lp-yearn-crv-vault',     // lp-yCRV — CG serves ~$1.20 (≈ raw pricePerShare, i.e. underlying LP valued at $1) vs real ~$0.18; priced by yearnV2 (cgKeyOverrides: pricePerShare × yCRV-f LP) written directly to this cg key.
+  'blotix',                 // BLOTIX — illiquid scam; CG marks ~$45 (×1T supply = ~$45T FDV) off a thin single pool circular-priced vs SAFEMONEY, inflated Uniswap V4 TVL (~$245M) + volume. No real value, so drop entirely (don't price on-chain).
 ]);
 
 // Chains where we have no working metadata fetch path. Tokens on these chains

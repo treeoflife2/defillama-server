@@ -188,7 +188,7 @@ async function fetchHolderBalances(
       const skipSet = addressesToSkip?.[id]?.[chain];
       const allWallets = addBurnAddresses ? [...wallets, ...fetchBurnAddresses(chainRaw)] : wallets;
       allWallets.forEach((address: string) => {
-        if (skipSet?.has(address)) return;
+        if (skipSet?.has(address.toLowerCase())) return;
         if (!(address in walletsByChain[chainRaw])) walletsByChain[chainRaw][address] = [];
         walletsByChain[chainRaw][address].push({ id, assets });
       });
@@ -226,12 +226,40 @@ async function fetchHolderBalances(
   return amounts;
 }
 
+const PEGGED_UNRELEASED_BY_CG: { [cgId: string]: { [chainRaw: string]: string[] } } = {
+  "stasis-eurs": { ethereum: ["0x1bee4f735062cd00841d6997964f187f5f5f5ac9"] },
+  "tether": { ethereum: ["0x5754284f345afc66a98fbb0a0afe71e0f007b949"] },
+  "tether-eurt": { ethereum: ["0x5754284f345afc66a98fbb0a0afe71e0f007b949"] },
+  "usd-coin": { ethereum: ["0x55fe002aeff02f77364de339a1292923a15844b8"] },
+};
+
+export function buildPeggedReserveSkip(finalData: {
+  [id: string]: { [key: string]: any };
+}): { [id: string]: { [chainLabel: string]: Set<string> } } {
+  const skip: { [id: string]: { [chainLabel: string]: Set<string> } } = {};
+  for (const id of Object.keys(finalData)) {
+    const cgId = finalData[id]?.coingeckoId;
+    const byChain = cgId ? PEGGED_UNRELEASED_BY_CG[cgId] : undefined;
+    const holders = finalData[id]?.holdersToRemove;
+    if (!byChain || !holders) continue;
+    for (const chainLabel of Object.keys(holders)) {
+      const reserves = byChain[getChainIdFromDisplayName(chainLabel)];
+      if (!reserves?.length) continue;
+      const wallets = (holders[chainLabel] || []).map((w: string) => String(w).toLowerCase());
+      const present = reserves.map((a) => a.toLowerCase()).filter((a) => wallets.includes(a));
+      if (present.length) (skip[id] ??= {})[chainLabel] = new Set(present);
+    }
+  }
+  return skip;
+}
+
 async function getExcludedBalances(
   timestamp: number,
   finalData: { [protocol: string]: { [key: string]: any } },
   tokenToProjectMap: { [token: string]: string }
 ) {
-  const excludedAmounts = await fetchHolderBalances(timestamp, finalData, tokenToProjectMap, "holdersToRemove", true);
+  const addressesToSkip = buildPeggedReserveSkip(finalData);
+  const excludedAmounts = await fetchHolderBalances(timestamp, finalData, tokenToProjectMap, "holdersToRemove", true, addressesToSkip);
 
   return excludedAmounts;
 }

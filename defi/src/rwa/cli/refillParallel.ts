@@ -32,8 +32,9 @@ import { Op, QueryTypes } from "sequelize";
 //   - Phase 1: nothing (runAtvlForTimestamp called without storeResults)
 //   - Phase 1.6 (only with --merge-write): UPSERT merged rows into daily+backup
 //   - Phase 2: DELETE rows flagged as spikes (e.g. $0 dips)
-//   - Phase 3: UPDATE rows where mcap < expected × 0.7 (price-dip recovery)
-const DRY_RUN = true;
+//   - Phase 3: UPDATE rows where stored mcap disagrees with real supply × price
+//     (price-gap recovery; supply carried forward only on a genuinely-missing read)
+const DRY_RUN = process.env.RWA_REFILL_DRY !== "false"; // dry-run by default; pass RWA_REFILL_DRY=false to write
 // --merge-write enables a Phase 1.5/1.6 merge-preserve write against existing
 // DB rows, run BEFORE Phases 2-3. Chains absent from the new compute are
 // preserved from the existing row, chains present in the new compute overwrite
@@ -44,12 +45,14 @@ const DRY_RUN = true;
 // your backfill values for those chains while filling in fresh data from the
 // new pipeline (peggedassets, EVM + Provenance archive fetches, etc.).
 const MERGE_WRITE = process.argv.includes("--merge-write");
-const START_DATE = "2025-09-08"; // Dinari dShare price-gap window (adapter dark 2025-09-08; coins prices backfilled)
-const END_DATE = "2026-06-11";
+const START_DATE = process.env.RWA_REFILL_START ?? "2025-09-08"; // env RWA_REFILL_START overrides; default = Dinari dShare price-gap window
+const END_DATE = process.env.RWA_REFILL_END ?? "2026-06-11";
 const BACKFILL_CONCURRENCY = 5;
 const ID_CONCURRENCY = 10;
 const PRICE_FETCH_CONCURRENCY = 8;
-const IDS: string[] = [
+const IDS: string[] = process.env.RWA_REFILL_IDS
+  ? process.env.RWA_REFILL_IDS.split(",").map((s) => s.trim()).filter(Boolean) // env override (e.g. RWA_REFILL_IDS=434,435,...)
+  : [
   // Dinari dShares re-derive (coins prices backfilled 2026-06-15). VALIDATION SUBSET (liquid names)
   // first; once a few charts look right, expand to the full range 434–536 (103 dShares; #433 USD+
   // excluded — unpriced by design / stablecoins-layer). Needs archive RPCs (ETHEREUM_RPC/ARBITRUM_RPC/BASE_RPC).
@@ -66,9 +69,7 @@ const SPIKE_RATIO_HIGH = 1.5;
 const RECOVERY_RATIO_LOW = 0.5;
 const RECOVERY_RATIO_HIGH = 5;
 const MAX_SPIKE_RUN = 5;
-
-// Price-failure dip threshold
-const DIP_RATIO = 0.7;
+const PRICE_FIX_TOL = 0.02;
 
 // ── Per-stage disk cache ──────────────────────────────────────────────
 // Each long-running stage writes its output to disk so a later-stage failure
@@ -192,6 +193,7 @@ function convertAtvlResult(
       id,
       mcap: JSON.stringify(mcap),
       activemcap: JSON.stringify(activemcap),
+      totalsupply: JSON.stringify(totalsupply),
       aggregatemcap,
       aggregatedactivemcap,
     });
@@ -426,14 +428,15 @@ function applyPriceFixes(
 ): { fixedRows: any[]; fixCount: number } {
   if (Object.keys(priceByChainTs).length === 0) return { fixedRows: rows, fixCount: 0 };
 
-  const forwardSupplyCache: Record<string, number> = {};
-  let prevTotalMcap = 0;
+  const lastPrice: Record<string, { price: number; decimals: number }> = {};
+  const lastSupply: Record<string, number> = {};
   let fixCount = 0;
 
   const fixedRows = rows.map((row: any) => {
     const ts = Number(row.timestamp);
     const mcapObj = parseJson(row.mcap);
     const activemcapObj = parseJson(row.activemcap);
+    const supplyObj = parseJson(row.totalsupply);
     const originalTotal = sumObj(mcapObj);
 
     let modified = false;
@@ -441,37 +444,36 @@ function applyPriceFixes(
     const newActivemcap = { ...activemcapObj };
 
     for (const chainSlug of Object.keys(priceByChainTs)) {
-      const chainMcap = Number(mcapObj[chainSlug]) || 0;
-      const priceEntry = priceByChainTs[chainSlug][ts]
+      const direct = priceByChainTs[chainSlug][ts]
         || priceByChainTs[chainSlug][ts - 86400]
         || priceByChainTs[chainSlug][ts + 86400];
+      if (direct && direct.price > 0) lastPrice[chainSlug] = direct;
+      const priceEntry = direct && direct.price > 0 ? direct : lastPrice[chainSlug];
 
-      if (chainMcap > 100 && priceEntry && priceEntry.price > 0) {
-        const implied = (chainMcap * Math.pow(10, priceEntry.decimals)) / priceEntry.price;
-        if (Number.isFinite(implied) && implied > 0) {
-          if (prevTotalMcap === 0 || originalTotal > prevTotalMcap * DIP_RATIO) {
-            forwardSupplyCache[chainSlug] = implied;
-          }
-        }
-      }
+      // Present (incl. real 0) = authoritative → use it and refresh the baseline.
+      // Absent (failed read) = carry forward the last good supply to fill the gap.
+      const hasSupply = supplyObj[chainSlug] != null;
+      const rawSupply = Number(supplyObj[chainSlug]) || 0;
+      if (hasSupply && rawSupply > 0) lastSupply[chainSlug] = rawSupply;
+      const supply = hasSupply ? rawSupply : (lastSupply[chainSlug] ?? 0);
+      if (!priceEntry || priceEntry.price <= 0 || supply <= 0) continue;
 
-      const cachedSupply = forwardSupplyCache[chainSlug];
-      if (!cachedSupply || !priceEntry || priceEntry.price <= 0) continue;
+      // onChainMcap is, by definition, real supply × real price. Recompute it.
+      const realMcap = priceEntry.price * supply;
+      if (!Number.isFinite(realMcap) || realMcap < 100) continue;
 
-      const expectedMcap = (priceEntry.price * cachedSupply) / Math.pow(10, priceEntry.decimals);
-      if (!Number.isFinite(expectedMcap) || expectedMcap < 100) continue;
-
-      if (chainMcap < expectedMcap * DIP_RATIO) {
-        newMcap[chainSlug] = Math.round(expectedMcap);
+      const chainMcap = Number(mcapObj[chainSlug]) || 0;
+      // Only overwrite when the stored value materially disagrees (a price-gap
+      // artifact). A real supply move already equals supply×price, so it's left alone.
+      if (Math.abs(chainMcap - realMcap) > realMcap * PRICE_FIX_TOL) {
+        newMcap[chainSlug] = Math.round(realMcap);
         const activeRatio = chainMcap > 0
           ? (Number(activemcapObj[chainSlug]) || 0) / chainMcap
           : 1;
-        newActivemcap[chainSlug] = Math.round(expectedMcap * Math.min(activeRatio, 1));
+        newActivemcap[chainSlug] = Math.round(realMcap * Math.min(activeRatio, 1));
         modified = true;
       }
     }
-
-    prevTotalMcap = sumObj(newMcap);
 
     if (modified) {
       fixCount++;
@@ -1019,7 +1021,7 @@ async function main() {
   // Phase 5: Generate HTML preview
   if (results.length > 0) {
     const html = generateHtml(results);
-    const outPath = path.join(__dirname, "refill-preview.html");
+    const outPath = path.join(__dirname, "refill-preview1.html");
     fs.writeFileSync(outPath, html);
     console.log(`\nChart written to ${outPath}`);
     console.log(`Open in browser: file://${outPath}`);
