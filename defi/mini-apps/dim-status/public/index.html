@@ -306,6 +306,7 @@ const RUN_TYPES = [
 const SUB_SECTIONS = [
   { key: 'errors',        label: 'Failures'            },
   { key: 'long',          label: 'Long Runners'        },
+  { key: 'still-running', label: 'Still Running'       },
   { key: 'chain',         label: 'Chain Stats'         },
   { key: 'rpc-hash',      label: 'RPC Hash Stats'      },
   { key: 'rpc-chain',     label: 'RPC Chain Stats'     },
@@ -540,6 +541,7 @@ async function loadTab(runType) {
     const adapterStats  = run.adapterStats            ?? [];
     const jsonLogs      = run.jsonLogs                ?? [];
     const longRunners   = run.longRunners             ?? [];
+    const stillRunning  = run.stillRunning            ?? [];
     const chainStats    = run.chainStats              ?? [];
     const rpcHashStats  = run.rpcEventHashStats       ?? [];
     const rpcChainStats = run.rpcChainStats           ?? [];
@@ -578,6 +580,7 @@ async function loadTab(runType) {
     const subDefs = SUB_SECTIONS.map(s => {
       if (s.key === 'errors') return { ...s, label: `Failures (${errors.length})` };
       if (s.key === 'long')   return { ...s, label: `Long Runners (${longRunners.length})` };
+      if (s.key === 'still-running') return { ...s, label: `Still Running (${stillRunning.length})` };
       return s;
     });
 
@@ -631,6 +634,12 @@ async function loadTab(runType) {
       { key: 'timeTakenMS', label: 'Time',      render: r => r.timeHN || fmtDurMs(r.timeTakenMS) },
       { key: 'chains',      label: 'Chains',    render: r => (r.chains ?? []).join(', ') || '—' },
     ], 'timeTakenMS', -1);
+
+    renderTable('tbl-still-running', stillRunning, [
+      { key: 'name',         label: 'Adapter',     render: r => `<span class="bold">${esc(r.name)}</span>` },
+      { key: 'adapterType',  label: 'Type',        render: r => r.adapterType ? `<span class="tag">${esc(r.adapterType)}</span>` : '—' },
+      { key: 'runningForMS', label: 'Running For', render: r => r.runningForHN || fmtDurMs(r.runningForMS), sortVal: r => r.runningForMS },
+    ], 'runningForMS', -1);
 
     renderTable('tbl-chain', chainStats, [
       { key: 'chain',        label: 'Chain' },

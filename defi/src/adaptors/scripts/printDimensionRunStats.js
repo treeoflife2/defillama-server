@@ -284,8 +284,22 @@ function humanizeDuration(ms) {
 function printAdapterStats() {
   log('[Adapter type stats] ')
   const startLogs = allLogs.filter(i => i.startsWith('[')).map(parseStartLog).filter(i => i)
+  const startedAtLogs = allLogs.filter(i => i.startsWith('[')).map(parseStartedAtLog).filter(i => i)
   const endLogs = allLogs.filter(i => i.startsWith('[')).map(parseEndLog).filter(i => i)
   const skippedLogs = allLogs.filter(i => i.startsWith('Skipping')).map(parseSkippedLogs).filter(i => i)
+
+  // when each adapter type's run ended (process exit reference for still-running adapters)
+  const exitAtByType = {}
+  ;(finalStatsData.jsonLogs ?? []).forEach(l => {
+    if (l && l.type === 'adapterFinalRes' && l.exitAtMs)
+      exitAtByType[l.adapterType] = l.exitAtMs
+  })
+
+  // start time per `${adapterType}-${name}` (last start wins, in case of retries)
+  const startedAtByKey = {}
+  startedAtLogs.forEach(({ adapterType, name, startedAtMs }) => {
+    startedAtByKey[`${adapterType}-${name}`] = startedAtMs
+  })
 
   const stats = {}
   const skippedSet = new Set()
@@ -328,15 +342,37 @@ function printAdapterStats() {
 
   const statsArray = Object.values(stats)
   statsArray.sort((a, b) => b.started - a.started)
+
+  // adapters that were still running when the process exited, with how long
+  // they had been running (ignore anything under a minute)
+  const MIN_STILL_RUNNING_MS = 60 * 1000
+  const stillRunning = []
   statsArray.forEach(i => {
-    i.notFinished = Array.from(i.notFinished).join(',').slice(0, 1000)
-    i.running = i.notFinished.length
+    const notFinishedNames = Array.from(i.notFinished)
+    const exitAtMs = exitAtByType[i.adapterType]
+    notFinishedNames.forEach(name => {
+      const startedAtMs = startedAtByKey[`${i.adapterType}-${name}`]
+      if (!exitAtMs || !startedAtMs) return
+      const runningForMS = exitAtMs - startedAtMs
+      if (runningForMS < MIN_STILL_RUNNING_MS) return
+      stillRunning.push({
+        adapterType: i.adapterType,
+        name,
+        runningForMS,
+        runningForHN: humanizeDuration(runningForMS),
+      })
+    })
+    i.running = notFinishedNames.length
+    i.notFinished = notFinishedNames.join(',').slice(0, 1000)
   })
 
-
+  stillRunning.sort((a, b) => b.runningForMS - a.runningForMS)
+  finalStatsData.stillRunning = clone(stillRunning)
 
   finalStatsData.adapterStats = clone(statsArray)
   table(statsArray, ['adapterType', 'started', 'running', 'skipped', 'dead', 'haveData', 'notFinished',], 'Breakdown by adapter type')
+  if (stillRunning.length)
+    table(stillRunning, ['adapterType', 'name', 'runningForHN'], 'Adapters still running at exit (>= 1 min)')
 
 
   const longRunners = []
@@ -403,6 +439,17 @@ function printAdapterStats() {
     if (match) {
       const [, adapterType, name] = match;
       return { adapterType, name, };
+    }
+    return null;
+  }
+  function parseStartedAtLog(statsString) {
+    if (!statsString.includes('started!')) return null
+    if (!statsString.includes('startedAtMs')) return null
+    const regex = /\[(.+)\] - (.+) started! \| startedAtMs: (\d+)/;
+    const match = statsString.match(regex);
+    if (match) {
+      const [, adapterType, name, startedAtMs] = match;
+      return { adapterType, name, startedAtMs: +startedAtMs };
     }
     return null;
   }

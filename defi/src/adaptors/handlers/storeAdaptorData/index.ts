@@ -172,6 +172,8 @@ export const handler2 = async (options: DimensionRunOptions) => {
     .for(protocols)
     .process(async (protocol: ProtocolAdaptor, index: number) => {
       const startTime = Date.now()
+      if (!isRunFromRefillScript)
+        console.log(`[${adapterType}] - ${protocol.module} started! | startedAtMs: ${startTime}`)
       try {
         const result = await runAndStoreProtocol(protocol, index)
         results.push(result)
@@ -209,7 +211,7 @@ export const handler2 = async (options: DimensionRunOptions) => {
 
     if (!isRunFromRefillScript && !isDryRun) {
       console.log(`[${adapterType}] Success: ${results.length} Errors: ${errors.length} Time taken: ${timeTakenSeconds}s`)
-      console.log('[JSON-log]', JSON.stringify({ success: results.length, errors: errors.length, timeTaken: timeTakenSeconds, type: 'adapterFinalRes', key: 'adapterFinalRes-' + adapterType, adapterType }))
+      console.log('[JSON-log]', JSON.stringify({ success: results.length, errors: errors.length, timeTaken: timeTakenSeconds, exitAtMs: debugTimeEnd, type: 'adapterFinalRes', key: 'adapterFinalRes-' + adapterType, adapterType }))
       try {
         await sendDiscordAlert(
           `[${adapterType}] Success: ${results.length} Errors: ${errors.length} Time taken: ${timeTakenSeconds}`,
