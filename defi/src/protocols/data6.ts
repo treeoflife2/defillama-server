@@ -8399,5 +8399,73 @@ const data6: Protocol[] = [
       dexs: "safepal-card",
     }
   },
+  {
+    id: "8105",
+    name: "Samsara",
+    address: "solana:5DkzT65YJvCsZcot9L6qwkJnsBCPmKHjJz3QU7t7QeRW",
+    symbol: "ANA",
+    url: "https://samsara.nirvana.finance/",
+    description:
+      "Samsara is the home of navTokens—on-chain derivatives that multiply in value agaist their base assets with demand. Each one has a mathematically impenetrable floor price (Nirvana Assured Value, or NAV) enforced by protocol-owned reserves",
+    chain: "Solana",
+    logo: `${protocolIconsUrl}/samsara`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Onchain Capital Allocator",
+    chains: ["Solana"],
+    module: "dummy.js",
+    twitter: "nirvana_fi",
+    parentProtocol: "parent#nirvana",
+    dimensions: {
+      fees: "nirvana-samsara",
+    }
+  },
+  {
+    id: "8106",
+    name: "Hyperlynx V2",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://hyperlynx.fi/
+    description:
+      "Hyperlynx V2 is a HyperEVM DEX for trading HYPE, liquid-staked HYPE, and tokenized stocks, with both concentrated and standard liquidity pools",
+    chain: "Hyperliquid L1",
+    logo: `${protocolIconsUrl}/hyperlynx-v2`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    tags: ["AMM"],
+    chains: ["Hyperliquid L1"],
+    module: "hyperlynx/index.js",
+    twitter: "hyperlynxfi",
+    parentProtocol: "parent#hyperlynx",
+    dimensions: {
+      fees: "hyperlynx-v2",
+      dexs: "hyperlynx-v2",
+    }
+  },
+  {
+    id: "8107",
+    name: "Hyperlynx V3",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://hyperlynx.fi/
+    description:
+      "Hyperlynx V3 is a HyperEVM DEX for trading HYPE, liquid-staked HYPE, and tokenized stocks, with both concentrated and standard liquidity pools",
+    chain: "Hyperliquid L1",
+    logo: `${protocolIconsUrl}/hyperlynx-v3`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    tags: ["CLMM"],
+    chains: ["Hyperliquid L1"],
+    module: "hyperlynx-v3/index.js",
+    twitter: "hyperlynxfi",
+    parentProtocol: "parent#hyperlynx",
+    dimensions: {
+      fees: "hyperlynx-v3",
+      dexs: "hyperlynx-v3",
+    }
+  },
 ];
 export default data6;

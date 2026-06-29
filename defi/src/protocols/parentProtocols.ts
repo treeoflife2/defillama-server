@@ -10022,6 +10022,18 @@ const parentProtocols: IParentProtocol[] = [
     chains: [],
     twitter: "defiapp",
   },
+  {
+    id: "parent#hyperlynx",
+    name: "Hyperlynx",
+    url: " ", // pending to add url https://hyperlynx.fi
+    description: `Hyperlynx is a HyperEVM DEX for trading HYPE, liquid-staked HYPE, and tokenized stocks, with both concentrated and standard liquidity pools`,
+    logo: `${protocolIconsUrl}/hyperlynx`,
+    gecko_id: null,
+    cmcId: null,
+    chains: [],
+    twitter: "hyperlynxfi",
+    github: ["HyperlynxFi"],
+  },
 ];
 
 export default parentProtocols;
