@@ -2794,14 +2794,15 @@ const data5: Protocol[] = [
   },
   {
     id: "7012",
-    name: "Piku",
+    name: "Piku Finance",
+    previousNames: ["Piku"],
     address: "0x2e4039e8e31475d65dc00293c366fdbfbbc02dc3",
     symbol: "PIKU",
     url: "https://piku.co/",
     description:
-      "USP is a yield-optimized stablecoin governed by PikuDAO. It launches fully backed 1:1 by USD-denominated stablecoins, and over time the backing is diversified into a basket of on-chain and off-chain yield-generating assets. The yield from these assets increases the underlying value of USP, allowing it to appreciate above its initial $1.00 launch value. USP functions as a savings-oriented asset with simplified access.",
+      "Piku Finance is an on-chain yield platform offering USP, a yield-optimized stablecoin, together with institutional-grade Morini Capital vaults focused on market-neutral, foreign exchange arbitrage, carry trade, and basis trade strategies.",
     chain: "Ethereum",
-    logo: `${protocolIconsUrl}/piku`,
+    logo: `${protocolIconsUrl}/piku-finance`,
     audits: "2",
     gecko_id: "piku-utility-token",
     cmcId: null,
