@@ -7816,6 +7816,9 @@ const data6: Protocol[] = [
     twitter: "JupiterExchange",
     parentProtocol: "parent#jupiter",
     listedAt: 1782413447,
+    dimensions: {
+      fees: "jupiter-offerbook",
+    },
   },
   {
     id: "8077",
