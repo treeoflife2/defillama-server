@@ -9969,7 +9969,7 @@ const parentProtocols: IParentProtocol[] = [
   {
     id: "parent#turboflow",
     name: "TurboFlow",
-    url: "https://www.turboflow.xyz/",
+    url: "https://www.tf.xyz/",
     description: "TurboFlow is an on-chain trading ecosystem focusing on the convergence of Perpetual Contracts and Prediction Markets. Everyone gets a seat at TurboFlow.",
     logo: `${protocolIconsUrl}/turboflow`,
     gecko_id: null,

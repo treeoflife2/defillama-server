@@ -1685,7 +1685,7 @@ const data5: Protocol[] = [
     name: "TurboFlow Perps",
     address: null,
     symbol: "-",
-    url: "https://www.turboflow.xyz/",
+    url: "https://www.tf.xyz/",
     description: "TurboFlow is an on-chain trading ecosystem focusing on the convergence of Perpetual Contracts and Prediction Markets. Everyone gets a seat at TurboFlow.",
     chain: "Binance",
     logo: `${protocolIconsUrl}/turboflow-perps`,
