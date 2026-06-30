@@ -15,6 +15,13 @@ const contracts: {
     underlying: "0xd102ce6a4db07d247fcc28f366a623df0938ca9e",
     token: "0x8f7D64ea96D729EF24a0F30b4526D47b80d877B9",
   },
+  // Money Protocol (BPD) - Liquity fork on Rootstock; RBTC underlying redirects to bitcoin
+  rsk: {
+    manager: "0xb6a3e678219d9119ae3B65AC501638b986B5038b",
+    feed: "0x2D4E701fB9Ad7cE1FBdf6817Ea92BE5B4C1c612F",
+    underlying: "0x0000000000000000000000000000000000000000",
+    token: "0x1fe2F558E2120C4BdF4217248d2940043a8E1208",
+  },
 };
 
 const abi: { [name: string]: any } = {

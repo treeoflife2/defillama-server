@@ -4144,6 +4144,436 @@
     }
   },
   "arbitrum": {
+    "0xeef40749c62d75fe68893a9f45152813679df8a6": {
+      "decimals": "18",
+      "symbol": "AAOIrh",
+      "to": "asset#robinhood:0x521cf887e6531c6f667b5bc4d896e5d9bfe8eb2e"
+    },
+    "0x98a3adb61b69fd5845f7960697f1a0eb5828d726": {
+      "decimals": "18",
+      "symbol": "AMATrh",
+      "to": "asset#robinhood:0x36046893810a7e7fce501229d57dc3fc8c8716d0"
+    },
+    "0x241d6f612ef5209c92a446e5ce05f680c4077c2b": {
+      "decimals": "18",
+      "symbol": "AMDrh",
+      "to": "asset#robinhood:0x86923f96303d656e4aa86d9d42d1e57ad2023fdc"
+    },
+    "0xbe4b4977045d4e77b8cf945bf9f1ad9b65a773b9": {
+      "decimals": "18",
+      "symbol": "APLDrh",
+      "to": "asset#robinhood:0xb8dbf92f9741c9ac1c32115e78581f23509916fd"
+    },
+    "0x6432176f6c36cfc311e339f068d7b6fd8f28d6ef": {
+      "decimals": "18",
+      "symbol": "AVGOrh",
+      "to": "asset#robinhood:0x156e175dd063a8ce274c50654ef40e0032b3fbcf"
+    },
+    "0x7639de4f3d46a577963865956e901c81b4a5a3f3": {
+      "decimals": "18",
+      "symbol": "BArh",
+      "to": "asset#robinhood:0x4d21483a44bf67a86b77e3da301411880797d452"
+    },
+    "0x9db905db6201d14df2f8004aa8480a4b0fe1a4ad": {
+      "decimals": "18",
+      "symbol": "BErh",
+      "to": "asset#robinhood:0x822cc93ffd030293e9842c30bbd678f530701867"
+    },
+    "0xd20971596f8594f0a29a71508eb186d4b9a71940": {
+      "decimals": "18",
+      "symbol": "CCLrh",
+      "to": "asset#robinhood:0x9651342cea770ae9a2969ba2a52611523146aef9"
+    },
+    "0xb0b9b8bd5f84019084e6802fa778d3a601f47db1": {
+      "decimals": "18",
+      "symbol": "CELHrh",
+      "to": "asset#robinhood:0x8cf07c5a878945185d327aaa6e33faa95f95e7bf"
+    },
+    "0x66b716857c99c85346613bd8620ec3559cd9b9fd": {
+      "decimals": "18",
+      "symbol": "CLSKrh",
+      "to": "asset#robinhood:0xcbb95bbf36099d34da091dc6fa6f49efa257cee3"
+    },
+    "0x9b9c0b85e04e3500fb82278f88783d6c772258b4": {
+      "decimals": "18",
+      "symbol": "COINrh",
+      "to": "asset#robinhood:0x6330d8c3178a418788df01a47479c0ce7ccf450b"
+    },
+    "0xd2ca741550addc381a21076919b53cfed244580d": {
+      "decimals": "18",
+      "symbol": "COSTrh",
+      "to": "asset#robinhood:0x4ea005168d7f09a7a0ba9d1def21a479950e44c2"
+    },
+    "0x3d27f3b10f869eb161bb07d9a92977a35d7c079b": {
+      "decimals": "18",
+      "symbol": "CRWDrh",
+      "to": "asset#robinhood:0xea72ecca2d0f6bfa1394dbbcff85b52cd4233931"
+    },
+    "0xa59029e7eb06a33abd8ce178810f0467c0179547": {
+      "decimals": "18",
+      "symbol": "CRWVrh",
+      "to": "asset#robinhood:0x5f10a1c971b69e47e059e1dc91901b59b3fb49c3"
+    },
+    "0x8ca7930ca57215309756038119faeea17736f0ef": {
+      "decimals": "18",
+      "symbol": "DDOGrh",
+      "to": "asset#robinhood:0x27c99fbde9d0d2aa4f4bfb4943f237843ddf6958"
+    },
+    "0x2c26783f426c9883466c59665b83b9cc7de12b22": {
+      "decimals": "18",
+      "symbol": "DELLrh",
+      "to": "asset#robinhood:0x941ae714ec6d8130c7b75d67160ca08f1e7d11dd"
+    },
+    "0x08ab0ccb04e6ea46cb0ebd3400cbfe1bd2bf5efe": {
+      "decimals": "18",
+      "symbol": "ELFrh",
+      "to": "asset#robinhood:0x39ec44bee4f6a116c6f9b8de566848a985c53c60"
+    },
+    "0xf9ac4904302d132477ee536a06159487bc6d9ad1": {
+      "decimals": "18",
+      "symbol": "EWYrh",
+      "to": "asset#robinhood:0x7f0abef0c07280f82c6a08ead09ded6bae2c13fc"
+    },
+    "0xe3cd381b788ec7f2750db644babd994289050050": {
+      "decimals": "18",
+      "symbol": "FLNCrh",
+      "to": "asset#robinhood:0x282e87451e10fa6679bc7d76c69be44cd3fc777c"
+    },
+    "0x3922ecf4e5d62564ec19fb333d69f1c162f0c085": {
+      "decimals": "18",
+      "symbol": "Frh",
+      "to": "asset#robinhood:0x25c288e6d899b9bc30160965ad9644c67e73be0c"
+    },
+    "0xbb50c1d166e30e988e4d9014109662a4dd9c59ae": {
+      "decimals": "18",
+      "symbol": "GLWrh",
+      "to": "asset#robinhood:0x7c04e6a3368f2a1de3874f0e80d2e0a1a9915da6"
+    },
+    "0x98602aed96587ea199fac7da5ca95527f180abb6": {
+      "decimals": "18",
+      "symbol": "GMErh",
+      "to": "asset#robinhood:0x1b0e319c6a659f002271b69db8a7df2f911c153e"
+    },
+    "0x043c1841e915a2dc175e3278f96a5deebeb6911a": {
+      "decimals": "18",
+      "symbol": "GOOGLrh",
+      "to": "asset#robinhood:0x2e0847e8910a9732eb3fb1bb4b70a580adad4fe3"
+    },
+    "0xfe056424b97d461302b9127dd701c919c019b13e": {
+      "decimals": "18",
+      "symbol": "INODrh",
+      "to": "asset#robinhood:0xf1953dab6fad537488d5a022361ffaa8b4c95ec6"
+    },
+    "0x00499400f5ef31cd09d34cc7d13a3ec830fd72c2": {
+      "decimals": "18",
+      "symbol": "INTUrh",
+      "to": "asset#robinhood:0x56d23bee5f41a7120170b0c603dae30128e460e9"
+    },
+    "0x4a3e354ad8b1366fefec2a2c6e91372a75698640": {
+      "decimals": "18",
+      "symbol": "IRENrh",
+      "to": "asset#robinhood:0xf0ab0c93be6f41369d302e55db1a96b3c430212d"
+    },
+    "0x4d93647a58243b8f8b582b817748de6b7fc155fe": {
+      "decimals": "18",
+      "symbol": "LITErh",
+      "to": "asset#robinhood:0x8ef20885f94e3d9bc7eb3080279188bd5ed7c08c"
+    },
+    "0x55f732a31517864b707a958c7ef6024e334f5733": {
+      "decimals": "18",
+      "symbol": "LLYrh",
+      "to": "asset#robinhood:0x8005d266423c7ea827372c9c864491e5786600ea"
+    },
+    "0xc69bf1e41b2a346ea6034cec939e51a9c4ce2703": {
+      "decimals": "18",
+      "symbol": "LULUrh",
+      "to": "asset#robinhood:0x4e62068525ab11fe768e29dfd00ef909b9803016"
+    },
+    "0x250692b46d2d68eb2f05d8ca640a04eb56762c61": {
+      "decimals": "18",
+      "symbol": "LUNRrh",
+      "to": "asset#robinhood:0xa5d4968421ba94814be3b136b15cf422101ac1a3"
+    },
+    "0x93e488bd101410fe55ef331118e82e3dedbac07b": {
+      "decimals": "18",
+      "symbol": "MDBrh",
+      "to": "asset#robinhood:0xddf2266b79abf0b48898959b0ed6e6adf512be74"
+    },
+    "0xc5f5608dea75398f80906c49fccffbf402b699b1": {
+      "decimals": "18",
+      "symbol": "METArh",
+      "to": "asset#robinhood:0xc0d6457c16cc70d6790dd43521c899c87ce02f35"
+    },
+    "0xa94fc52c8c3c61376659c70df8a8782d4168138d": {
+      "decimals": "18",
+      "symbol": "MRVLrh",
+      "to": "asset#robinhood:0x62fd0668e10d8b72339be2dcf7643001688ff13b"
+    },
+    "0x44f9bce486090d3f3e26768e3ece4c864616526f": {
+      "decimals": "18",
+      "symbol": "MSFTrh",
+      "to": "asset#robinhood:0xe93237c50d904957cf27e7b1133b510c669c2e74"
+    },
+    "0x201929f36b3aa507001ef7a390e23284966b7202": {
+      "decimals": "18",
+      "symbol": "MUrh",
+      "to": "asset#robinhood:0xff080c8ce2e5feadaca0da81314ae59d232d4afd"
+    },
+    "0x8cb212b9358e6c4b23a422c791d205dd16f092f4": {
+      "decimals": "18",
+      "symbol": "MXLrh",
+      "to": "asset#robinhood:0x48961813349333209994750ffa89b3c5c22ec969"
+    },
+    "0x5f92c171f5075fa2a02d56607d2dffb0451026a8": {
+      "decimals": "18",
+      "symbol": "NBISrh",
+      "to": "asset#robinhood:0x9d9c6684f596f66a64c030b93a886d51fd4d7931"
+    },
+    "0xe5af9038f6aa63de88633e158a23ea8cd93a3783": {
+      "decimals": "18",
+      "symbol": "NFLXrh",
+      "to": "asset#robinhood:0xe0444ef8bf4ed74f74fd73686e2ddf4c1c5591e8"
+    },
+    "0x60fcc033c65f168050c159cbdd2b34e3328f159b": {
+      "decimals": "18",
+      "symbol": "NNErh",
+      "to": "asset#robinhood:0xbef75684c43c4ea7bd18dd532a2244674ee8b926"
+    },
+    "0xc37f64d584130cc3bc434be53adffc402902f1f7": {
+      "decimals": "18",
+      "symbol": "NOWrh",
+      "to": "asset#robinhood:0x0c3260af4b8f13a69c4c2dfb84fd667890cdfa14"
+    },
+    "0xe61065749d2feda0698d3e947d64cdab19afac91": {
+      "decimals": "18",
+      "symbol": "NUrh",
+      "to": "asset#robinhood:0x408c14038a04f7bd235329e26d2bf569ee20e250"
+    },
+    "0xd798fb9fcc5208fb935e974cd3f673b95c9ee69e": {
+      "decimals": "18",
+      "symbol": "NVDArh",
+      "to": "asset#robinhood:0xd0601ce157db5bdc3162bbac2a2c8af5320d9eec"
+    },
+    "0xcbb6afbb7bbd1346c787633291f2ed0c7f57f5f3": {
+      "decimals": "18",
+      "symbol": "NVTSrh",
+      "to": "asset#robinhood:0xbe6702d7b70315376dc48a3293f24f0982f86386"
+    },
+    "0x4451d3a5baddfc98c07d534b3874e4dd28637e06": {
+      "decimals": "18",
+      "symbol": "PENGrh",
+      "to": "asset#robinhood:0x9b23573b156b52565012f5ce02cdf60afbaa70be"
+    },
+    "0x019db453c782aca45ca7dd630c5a91ef45e8d753": {
+      "decimals": "18",
+      "symbol": "PLTRrh",
+      "to": "asset#robinhood:0x894e1ec2d74ffe5aef8dc8a9e84686accb964f2a"
+    },
+    "0xd5799ffdff2aba0dfe43be88f98bb9ad227374ed": {
+      "decimals": "18",
+      "symbol": "POETrh",
+      "to": "asset#robinhood:0xcf6b2d875361be807eafa57458c80f28521f9333"
+    },
+    "0x20cb6924d2a9e813b38f6d0667970212bc9be324": {
+      "decimals": "18",
+      "symbol": "PRrh",
+      "to": "asset#robinhood:0x4189f0c66ebbb0bfef1c31f763131361ef32f77c"
+    },
+    "0xc7936d047858fca92e10040aa9235060eb4e7a26": {
+      "decimals": "18",
+      "symbol": "QBTSrh",
+      "to": "asset#robinhood:0xc583c60aef9dc401da72cec1b404743a93cea1cc"
+    },
+    "0x6a77d0d9916fd1cda5bf5e9dbceec0ae239ff5d1": {
+      "decimals": "18",
+      "symbol": "QCOMrh",
+      "to": "asset#robinhood:0x0f17206447090e464c277571124dd2688e48aea9"
+    },
+    "0x3da74293c496524d5614416a5530d5d99dce16bc": {
+      "decimals": "18",
+      "symbol": "QQQrh",
+      "to": "asset#robinhood:0xd5f3879160bc7c32ebb4dc785f8a4f505888de68"
+    },
+    "0xcec220c4f0c8b7672fd3de58cd3c269810d762aa": {
+      "decimals": "18",
+      "symbol": "QUBTrh",
+      "to": "asset#robinhood:0x59818904ab4ce163b3ce4ffb64f2d6ca02c434b4"
+    },
+    "0x8d5271f1e719c92935adfb6b84872574a963a740": {
+      "decimals": "18",
+      "symbol": "RBLXrh",
+      "to": "asset#robinhood:0xf0c4bf4c582cb3836e98394b1d4e7b7281101be8"
+    },
+    "0xb5d82861d96f16115c5eb7c14f3883e996bb75da": {
+      "decimals": "18",
+      "symbol": "RDDTrh",
+      "to": "asset#robinhood:0x05b37fb53a299a1b874a619e1c4c404d52c36f4c"
+    },
+    "0xe87a374030db919b98119bc44ee3d656d187871d": {
+      "decimals": "18",
+      "symbol": "RDWrh",
+      "to": "asset#robinhood:0x92ef19e82bd8ff36661de838d5eae7e5cef0effe"
+    },
+    "0x211ca49e98905c8d5e40a63e4098bca36b538a9d": {
+      "decimals": "18",
+      "symbol": "RGTIrh",
+      "to": "asset#robinhood:0x284358abc07f9359f19f4b5b4ac91901be2597ba"
+    },
+    "0xcdfa197b257d670fdb0f07a70d0cc8427e414fa3": {
+      "decimals": "18",
+      "symbol": "RIVNrh",
+      "to": "asset#robinhood:0xb1bf26c1d20ff267a4f93550d1e0d06ac40a114b"
+    },
+    "0x7bb15a51d764df4f8d21d2a1c17ebf4b3623d459": {
+      "decimals": "18",
+      "symbol": "RKLBrh",
+      "to": "asset#robinhood:0x3b14c39e89d60d627b42a1a4ca45b5bb45fc12e2"
+    },
+    "0x7af3822f7f5f2f3823721f04eba7a7b9f06dfa64": {
+      "decimals": "18",
+      "symbol": "SATSrh",
+      "to": "asset#robinhood:0x95052ddcd5dc25641657424a8cf04834997e1730"
+    },
+    "0x9838f4cb186abc7f35c12e38414b24b9bc058c1a": {
+      "decimals": "18",
+      "symbol": "SGOVrh",
+      "to": "asset#robinhood:0x92fd66527192e3e61d4ddd13322aa222de86f9b5"
+    },
+    "0x441b09eb697e46a72075060697e24610e00911d2": {
+      "decimals": "18",
+      "symbol": "SHOPrh",
+      "to": "asset#robinhood:0xf53f66751b1eff985311b693531e3290f600c410"
+    },
+    "0xdbf3ae570a4daf8825fa8a550649a1805bacd6bf": {
+      "decimals": "18",
+      "symbol": "SLVrh",
+      "to": "asset#robinhood:0x411efb0e7f985935daec3d4c3ebaea0d0ad7d89f"
+    },
+    "0x572f7c10860f943b38ef5162e0c4be8d335009cb": {
+      "decimals": "18",
+      "symbol": "SMCIrh",
+      "to": "asset#robinhood:0xc01aa1fecec0605b13bc84874ff7256c0f5f562a"
+    },
+    "0x4b65297e54036cf8d9f2e6ba84dfb20934ecf498": {
+      "decimals": "18",
+      "symbol": "SOFIrh",
+      "to": "asset#robinhood:0x98e75885157c80992a8d41b696d8c9c6fb30a926"
+    },
+    "0xa2ac45ca3141205f23f0c79cb3c326c7360bbcce": {
+      "decimals": "18",
+      "symbol": "SOXXrh",
+      "to": "asset#robinhood:0x75742c18bc1f1c5c5f448f4c9d9c6f66dafaaa38"
+    },
+    "0xc311a25b6b6331405052e4e2e6542cb7d7bd71b5": {
+      "decimals": "18",
+      "symbol": "SPCXrh",
+      "to": "asset#robinhood:0x4a0e65a3eccec6dbe60ae065f2e7bb85fae35eea"
+    },
+    "0x9c5419c74bd33ca41e59ef8aa4d210d615483b53": {
+      "decimals": "18",
+      "symbol": "SPMOrh",
+      "to": "asset#robinhood:0xad622320e520de39e72d41ef07438c3fd3354875"
+    },
+    "0x95a1335e5acb6b0da544cf58c04c2d57cf028d80": {
+      "decimals": "18",
+      "symbol": "SPYrh",
+      "to": "asset#robinhood:0x117cc2133c37b721f49de2a7a74833232b3b4c0c"
+    },
+    "0x52ed905f3a5d624bdd95de9efab701d2860fbd62": {
+      "decimals": "18",
+      "symbol": "TSLArh",
+      "to": "asset#robinhood:0x322f0929c4625ed5bad873c95208d54e1c003b2d"
+    },
+    "0x8bf8a2aa715c7d3be214be0cbcc7dc484082260c": {
+      "decimals": "18",
+      "symbol": "TTWOrh",
+      "to": "asset#robinhood:0x5e81213613b6b86eab4c6c50d718d34359459786"
+    },
+    "0xd13c7aeb7b13105a59c8dac6e07d3f0b60b0fbb0": {
+      "decimals": "18",
+      "symbol": "UPSrh",
+      "to": "asset#robinhood:0xf23250dac154d05bb671cb0d0ebef3c635c79ce2"
+    },
+    "0x0715c304eaa8e5f398946af5ba6cb28b05d7f9b9": {
+      "decimals": "18",
+      "symbol": "USARrh",
+      "to": "asset#robinhood:0xd917b029c761d264c6a312bbbcda868658ef86a6"
+    },
+    "0x6668ec42a4d0c13472251904ba04a7656cba169d": {
+      "decimals": "18",
+      "symbol": "USOrh",
+      "to": "asset#robinhood:0xa30fa36db767ad9ed3f7a60fc79526fb4d56d344"
+    },
+    "0x6167f63b185caada2f328d967be973b22bf58858": {
+      "decimals": "18",
+      "symbol": "WDAYrh",
+      "to": "asset#robinhood:0x82da4646242e1d962e96e932269dc644c94a9caa"
+    },
+    "0xeccd8e7bf85e81379fe4336b7efe4de3a3df8d03": {
+      "decimals": "18",
+      "symbol": "XOMrh",
+      "to": "asset#robinhood:0xf9b46d3d1b22199d4d1025a9cedb540a33f1a2d5"
+    },
+    "0x1574dfe874b695b80eeb18074e41a2e63b2a365e": {
+      "decimals": "18",
+      "symbol": "ZMrh",
+      "to": "asset#robinhood:0x44c4f142009036cf477ed2d09932051843137cf1"
+    },
+    "0xebedacd1677d2a89ed785e07a8e28236caaa0c94": {
+      "decimals": "18",
+      "symbol": "ZSrh",
+      "to": "asset#robinhood:0x7dc013eb55e436f30d7ed1afe4e36d6e45e3c3f7"
+    },
+    "0x012c768e5162d5ed965d45935634efce705a57ac": {
+      "decimals": "18",
+      "symbol": "AAPLrh",
+      "to": "asset#robinhood:0xaf3d76f1834a1d425780943c99ea8a608f8a93f9"
+    },
+    "0xc78d6a55457f075b429bca8f50b961019e0888a3": {
+      "decimals": "18",
+      "symbol": "AMZNrh",
+      "to": "asset#robinhood:0x12f190a9f9d7d37a250758b26824b97ce941bf54"
+    },
+    "0x949d5d5ca6a31215aa9bfa84383d6909fda3855f": {
+      "decimals": "18",
+      "symbol": "MSTRrh",
+      "to": "asset#robinhood:0xec262a75e413fafd0df80480274532c79d42da09"
+    },
+    "0x260bdd1030a3355002c7845932c613acecf5e6e4": {
+      "decimals": "18",
+      "symbol": "INTCrh",
+      "to": "asset#robinhood:0xc72b96e0e48ecd4dc75e1e45396e26300bc39681"
+    },
+    "0xc42f2c18f304a7400267c91387478eed6ab9fa36": {
+      "decimals": "18",
+      "symbol": "IONQrh",
+      "to": "asset#robinhood:0x558378e000d634a36593e338ebacdd6207640efe"
+    },
+    "0x60fc7f30d7f952366638d1096ed5bba2b47ea146": {
+      "decimals": "18",
+      "symbol": "ORCLrh",
+      "to": "asset#robinhood:0xb0992820e760d836549ba69bc7598b4af75dee03"
+    },
+    "0xf1c5b6d3622e8fd1aed2d1ec4d1a46cf7edd65a8": {
+      "decimals": "18",
+      "symbol": "CRCLrh",
+      "to": "asset#robinhood:0xdf0992e440dd0be65bd8439b609d6d4366bf1cb5"
+    },
+    "0x476332389839b3ebe7d79585f27a0e7daf794852": {
+      "decimals": "18",
+      "symbol": "ASTSrh",
+      "to": "asset#robinhood:0x1af6446f07eb1d97c546afc8c9544cbdf3ad5137"
+    },
+    "0x4124ec7e16b6cdd31bdfcb1c5feff5ee054b6255": {
+      "decimals": "18",
+      "symbol": "XLKrh",
+      "to": "asset#robinhood:0x15cd20759ce7f3285c29a319de2d1a2e098c6f43"
+    },
+    "0x7fc3dd412980f28f1d3e2718d0fc6821808c2137": {
+      "decimals": "18",
+      "symbol": "SNDKrh",
+      "to": "asset#robinhood:0xb90a19ff0af67f7779aff50a882a9cff42446400"
+    },
     "0x18f52b3fb465118731d9e0d276d4eb3599d57596": {
       "decimals": "18",
       "symbol": "AID",

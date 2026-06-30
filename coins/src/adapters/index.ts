@@ -36,6 +36,7 @@ export default {
   // pyth: require("./oracles/pyth"),
   unknownTokensV3: require("./other/unknownTokensV3"),
   dinari: require("./rwa/dinari"),
+  robinhood: require("./rwa/robinhood"),
   few: require("./other/few"),
   zarban: require("./other/zarban"),
   ociswap: require("./markets/ociswap"),
