@@ -228,4 +228,5 @@ export default {
   hyperbeatEarn: require("./yield/hyperbeat"),
   auxite: require("./rwa/auxite"),
   magicLp: require("./markets/magicLp"),
+  realToken: require("./rwa/realToken"),
 };
