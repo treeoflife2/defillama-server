@@ -22622,7 +22622,8 @@ const data4: Protocol[] = [
     cmcId: null,
     tags: ["Commodities"],
     chains: ["Ethereum", "Arbitrum", "Base"],
-    module: "gaib/index.js",
+    //module: "gaib/index.js", // will track only in the RWA dashboard
+    module: "dummy.js",
     twitter: "gaib_ai",
     audit_links: ["https://docs.gaib.ai/audits"],
     github: ["gaib-ai"],
