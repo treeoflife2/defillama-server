@@ -9505,7 +9505,7 @@ The eWIT token is a custodial, wrapped version of the Witnet coin managed by the
     symbol: "-",
     url: "https://deluthium.ai/",
     description:
-      "De1 is an academic and research platform building fair, efficient financial infrastructure for humans and autonomous agents to trade at scale. Core project is the Financial World Model. A HD trading environment powered by real on-chain execution data. By capturing authentic market dynamics that public APIs miss (MEV, slippage, liquidity fragmentation, adversarial behaviour), AI agents can learn and adapt in realistic conditions before deploying live capital.",
+      "De1 is building the Financial World Model—an execution-native trading environment for traders and autonomous agents. Powered by its RL engine, De1 aggregates on-chain lit markets and dark-pool liquidity to deliver institutional-grade execution, smarter routing, and flexible trading modes across fragmented markets. Real execution flow becomes a decentralized intelligence layer, grounding traders and AI agents in live market dynamics beyond static simulations.",
     chain: "Binance",
     logo: `${protocolIconsUrl}/de1`,
     audits: "2",
