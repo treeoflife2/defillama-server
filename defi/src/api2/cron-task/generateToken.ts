@@ -11,6 +11,18 @@ const PROTOCOLS_URL = "/config/smol/appMetadata-protocols.json";
 const CHAINS_URL = "/config/smol/appMetadata-chains.json";
 const TOKEN_RIGHTS_URL = "/token-rights";
 const OUTPUT_ROUTE = "config/smol/token.json";
+const TOKEN_ROUTES_ROUTE = "config/smol/token-routes.json";
+
+type TokenRouteRegistry = Record<string, { key: string; route: string }>;
+
+type TokenDirectoryBuildResult = {
+  bySlug: Record<string, any>;
+  routeRegistry: TokenRouteRegistry;
+  nameFallbackCount: number;
+  preservedMissingTokenCount: number;
+  reservedRouteCount: number;
+  skippedDuplicateRouteKeyCount: number;
+};
 
 const slug = (value = "") =>
   String(value ?? "")
@@ -94,11 +106,6 @@ export const getTokenExtras = (item: any, extrasByGeckoId: Map<string, any>, tok
   return { ...extras, tokenRights: true };
 };
 
-const inferRouteSource = (key: string, item: any) => {
-  if (key === slug(item?.symbol)) return "symbol";
-  return "name";
-};
-
 const loadPreviousTokens = async (): Promise<[string, any][]> => {
   const previousData = await readRouteData(OUTPUT_ROUTE, { skipErrorLog: true });
   if (!previousData || typeof previousData !== "object") return [];
@@ -135,67 +142,124 @@ const getUniqueKey = (item: any, index: number, existingKeys: Set<string>) => {
   return uniqueKey;
 };
 
-const createTokenRecord = (item: any, routeSource: string, extras: any = {}) => ({
+export const getTokenRouteForKey = (key: string, item: any) => {
+  if (key === slug(item.symbol)) return `/token/${encodeURIComponent(item.symbol)}`;
+  if (key === slug(item.name)) return `/token/${encodeURIComponent(item.name)}`;
+  return `/token/${encodeURIComponent(key)}`;
+};
+
+export const createTokenRecord = (item: any, route: string, extras: any = {}) => ({
   name: item.name,
   symbol: item.symbol,
   token_nk: item.token_nk,
-  route: `/token/${encodeURIComponent(routeSource === "symbol" ? item.symbol : item.name)}`,
+  route,
   is_yields: Boolean(item.on_yields),
   mcap_rank: item.mcap_rank,
   logo: getTokenLogo(item.token_nk),
   ...extras,
 });
 
-const rankOf = (record: any) => {
-  const rank = record?.mcap_rank;
-  return typeof rank === "number" && Number.isFinite(rank) ? rank : Number.POSITIVE_INFINITY;
+export const addPreviousTokensToRouteRegistry = (
+  registry: TokenRouteRegistry,
+  previousTokens: [string, any][]
+): TokenRouteRegistry => {
+  for (const [key, item] of previousTokens) {
+    const tokenNk = item.token_nk;
+    if (registry[tokenNk]) continue;
+    registry[tokenNk] = {
+      key,
+      route: item.route ?? getTokenRouteForKey(key, item),
+    };
+  }
+  return registry;
 };
 
-const recomputeRouteForKey = (record: any, key: string) => ({
-  ...record,
-  route: `/token/${encodeURIComponent(key === slug(record?.symbol) ? record.symbol : record.name)}`,
-});
+const loadTokenRouteRegistry = async (previousTokens: [string, any][]): Promise<TokenRouteRegistry> => {
+  const registryData = await readRouteData(TOKEN_ROUTES_ROUTE, { skipErrorLog: true });
+  const registry: TokenRouteRegistry = {};
 
-export const reassignSymbolKeysByRank = (bySlug: Record<string, any>) => {
-  const groupsBySymbolSlug = new Map<string, Array<[string, any]>>();
-  for (const [key, item] of Object.entries(bySlug)) {
-    const symbolSlug = slug(item?.symbol);
-    if (!symbolSlug) continue;
-    const group = groupsBySymbolSlug.get(symbolSlug);
-    if (group) group.push([key, item]);
-    else groupsBySymbolSlug.set(symbolSlug, [[key, item]]);
+  if (registryData && typeof registryData === "object") {
+    for (const tokenNk in registryData as Record<string, any>) {
+      const item = (registryData as Record<string, any>)[tokenNk];
+      if (typeof item?.key !== "string" || typeof item?.route !== "string") continue;
+      registry[tokenNk] = { key: item.key, route: item.route };
+    }
   }
 
-  let reassignedCount = 0;
-  for (const [symbolSlug, group] of groupsBySymbolSlug) {
-    if (group.length < 2) continue;
+  return addPreviousTokensToRouteRegistry(registry, previousTokens);
+};
 
-    let bestEntry = group[0];
-    for (const entry of group) {
-      if (rankOf(entry[1]) < rankOf(bestEntry[1])) bestEntry = entry;
-    }
+export const buildTokenDirectory = (
+  uniqueCoins: any[],
+  nextTokensByTokenNk: Map<string, { item: any; extras: any }>,
+  previousTokens: [string, any][],
+  routeRegistry: TokenRouteRegistry
+): TokenDirectoryBuildResult => {
+  const bySlug: Record<string, any> = {};
+  const seenKeys = new Set<string>();
+  const routeRegistryKeys = new Set<string>();
+  const consumedTokenNks = new Set<string>();
+  const previousTokensByTokenNk = new Map<string, any>();
+  let nameFallbackCount = 0;
+  let preservedMissingTokenCount = 0;
+  let reservedRouteCount = 0;
+  let skippedDuplicateRouteKeyCount = 0;
 
-    const [bestKey, bestItem] = bestEntry;
-    if (bestKey === symbolSlug) continue;
-
-    const currentHolderEntry = group.find(([key]) => key === symbolSlug);
-
-    delete bySlug[bestKey];
-
-    if (currentHolderEntry) {
-      const [, currentHolderItem] = currentHolderEntry;
-      delete bySlug[symbolSlug];
-      const usedKeys = new Set(Object.keys(bySlug));
-      usedKeys.add(symbolSlug);
-      const fallbackKey = getUniqueKey(currentHolderItem, 0, usedKeys);
-      bySlug[fallbackKey] = recomputeRouteForKey(currentHolderItem, fallbackKey);
-    }
-
-    bySlug[symbolSlug] = recomputeRouteForKey(bestItem, symbolSlug);
-    reassignedCount++;
+  for (const [key, previousItem] of previousTokens) {
+    previousTokensByTokenNk.set(previousItem.token_nk, previousItem);
+    seenKeys.add(key);
   }
 
-  return reassignedCount;
+  for (const tokenNk in routeRegistry) {
+    const routeEntry = routeRegistry[tokenNk];
+    if (routeRegistryKeys.has(routeEntry.key)) {
+      consumedTokenNks.add(tokenNk);
+      skippedDuplicateRouteKeyCount++;
+      continue;
+    }
+    routeRegistryKeys.add(routeEntry.key);
+    seenKeys.add(routeEntry.key);
+
+    const nextToken = nextTokensByTokenNk.get(tokenNk);
+    if (nextToken) {
+      bySlug[routeEntry.key] = createTokenRecord(nextToken.item, routeEntry.route, nextToken.extras);
+      consumedTokenNks.add(tokenNk);
+      continue;
+    }
+
+    const previousItem = previousTokensByTokenNk.get(tokenNk);
+    if (previousItem) {
+      bySlug[routeEntry.key] = { ...previousItem, route: routeEntry.route };
+      preservedMissingTokenCount++;
+      continue;
+    }
+
+    reservedRouteCount++;
+  }
+
+  for (const [index, item] of uniqueCoins.entries()) {
+    if (consumedTokenNks.has(item.token_nk)) continue;
+
+    const symbolSlug = slug(item.symbol);
+    const key = getUniqueKey(item, index, seenKeys);
+    const extras = nextTokensByTokenNk.get(item.token_nk)?.extras ?? {};
+
+    if (key !== symbolSlug) nameFallbackCount++;
+
+    const route = getTokenRouteForKey(key, item);
+    routeRegistry[item.token_nk] = { key, route };
+    bySlug[key] = createTokenRecord(item, route, extras);
+    seenKeys.add(key);
+  }
+
+  return {
+    bySlug,
+    routeRegistry,
+    nameFallbackCount,
+    preservedMissingTokenCount,
+    reservedRouteCount,
+    skippedDuplicateRouteKeyCount,
+  };
 };
 
 async function generateToken() {
@@ -213,6 +277,7 @@ async function generateToken() {
   const extrasByGeckoId = getTokenMetadataExtrasByGeckoId(protocolsMetadata, chainsMetadata);
   const tokenRightsSymbols = getTokenRightsSymbols(tokenRightsData);
   const previousTokens = await loadPreviousTokens();
+  const routeRegistry = await loadTokenRouteRegistry(previousTokens);
   const uniqueCoins: any[] = [];
   const seenTokenNks = new Set<string>();
 
@@ -237,67 +302,22 @@ async function generateToken() {
     nextTokensByTokenNk.set(item.token_nk, { item, extras });
   }
 
-  const bySlug: Record<string, any> = {};
-  const seenKeys = new Set<string>();
-  const consumedTokenNks = new Set<string>();
-  let nameFallbackCount = 0;
-  let preservedMissingTokenCount = 0;
-
-  for (const [key, previousItem] of previousTokens) {
-    const tokenNk = previousItem.token_nk;
-    const nextToken = nextTokensByTokenNk.get(tokenNk);
-    seenKeys.add(key);
-
-    if (!nextToken) {
-      bySlug[key] = previousItem;
-      preservedMissingTokenCount++;
-      continue;
-    }
-
-    const routeSource = inferRouteSource(key, previousItem);
-    bySlug[key] = createTokenRecord(nextToken.item, routeSource, nextToken.extras);
-    consumedTokenNks.add(tokenNk);
-  }
-
-  for (const [index, item] of uniqueCoins.entries()) {
-    if (consumedTokenNks.has(item.token_nk)) continue;
-
-    const symbolSlug = slug(item.symbol);
-    const key = getUniqueKey(item, index, seenKeys);
-    const routeSource = inferRouteSource(key, item);
-    const extras = nextTokensByTokenNk.get(item.token_nk)?.extras ?? {};
-
-    if (key !== symbolSlug) nameFallbackCount++;
-
-    bySlug[key] = createTokenRecord(item, routeSource, extras);
-    seenKeys.add(key);
-  }
-
-  // we find duplicate symbols and remove the one that matches blacklist patterns in the key, this is to skip bridged/old versions of tokens that have same symbol as the original token
-  const symbolMap: Record<string, any> = {};
-  for (const [key, item] of Object.entries(bySlug)) {
-    const symbol = item.symbol.toLowerCase();
-    if (!symbolMap[symbol]) {
-      symbolMap[symbol] = key;
-    } else {
-      if (/old|bridged|wormhole|\(|\[/i.test(key)) {
-        // console.log(`Skipping duplicate ${symbol} <- ${key}`);
-        delete bySlug[key];
-      }
-    }
-  }
-
-  const reassignedSymbolKeys = reassignSymbolKeysByRank(bySlug);
-  if (reassignedSymbolKeys > 0) {
-    console.log(`Reassigned ${reassignedSymbolKeys} symbol keys to higher-mcap-ranked tokens`);
-  }
+  const {
+    bySlug,
+    routeRegistry: nextRouteRegistry,
+    nameFallbackCount,
+    preservedMissingTokenCount,
+    reservedRouteCount,
+    skippedDuplicateRouteKeyCount,
+  } = buildTokenDirectory(uniqueCoins, nextTokensByTokenNk, previousTokens, routeRegistry);
 
   await storeRouteData(OUTPUT_ROUTE, bySlug);
+  await storeRouteData(TOKEN_ROUTES_ROUTE, nextRouteRegistry);
 
   console.log(
     `Wrote ${
       Object.keys(bySlug).length
-    } tokens to ${OUTPUT_ROUTE}. Used fallback key selection for ${nameFallbackCount} tokens, Included ${includedWithoutMetadataCount} tokens without protocol/chain metadata, Skipped ${skippedDuplicateTokenNkCount} duplicate token_nk rows, Preserved ${preservedMissingTokenCount} existing tokens missing from the current feed`
+    } tokens to ${OUTPUT_ROUTE}. Used fallback key selection for ${nameFallbackCount} tokens, Included ${includedWithoutMetadataCount} tokens without protocol/chain metadata, Skipped ${skippedDuplicateTokenNkCount} duplicate token_nk rows, Preserved ${preservedMissingTokenCount} existing tokens missing from the current feed, Reserved ${reservedRouteCount} historical token routes without token records, Skipped ${skippedDuplicateRouteKeyCount} duplicate route registry keys`
   );
 }
 

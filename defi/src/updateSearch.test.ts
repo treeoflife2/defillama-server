@@ -8,6 +8,7 @@ import {
   buildFrontendPageSearchResult,
   buildProtocolSearchResult,
   buildStablecoinSearchResult,
+  buildTokenSearchResult,
   dedupeFrontendPageResults,
   getFrontendPageRouteAlias,
   getProtocolSubSections,
@@ -273,6 +274,33 @@ describe("entity and subpage search docs", () => {
       r: SEARCH_RANK.entity,
       topLevelRank: SEARCH_DEPTH_RANK.topLevel,
       type: "Stablecoin",
+    });
+  });
+
+  it("builds token search results from canonical token cache routes", () => {
+    const result = buildTokenSearchResult(
+      {
+        name: "Streamr",
+        symbol: "DATA",
+        token_nk: "coingecko:streamr",
+        route: "/token/Streamr",
+        is_yields: true,
+        mcap_rank: 4616,
+        logo: "https://token-icons.llamao.fi/icons/tokens/gecko/streamr?w=48&h=48",
+      },
+      { "/token/Streamr": 7, "/token/DATA": 99 }
+    );
+
+    expect(result).toMatchObject({
+      id: "coingecko_streamr_token",
+      name: "Streamr",
+      symbol: "DATA",
+      route: "/token/Streamr",
+      logo: "https://token-icons.llamao.fi/icons/tokens/gecko/streamr?w=48&h=48",
+      mcapRank: 4616,
+      r: SEARCH_RANK.subPage,
+      v: 7,
+      type: "Token",
     });
   });
 

@@ -314,6 +314,20 @@ export function buildStablecoinSearchResult(
   };
 }
 
+export function buildTokenSearchResult(coin: TokenSearchData, tastyMetrics: Record<string, number>): SearchResult {
+  return {
+    id: `${coin.token_nk.replace(/[^a-zA-Z0-9_-]/g, "_")}_token`,
+    name: coin.name,
+    symbol: coin.symbol,
+    route: coin.route,
+    ...(coin.logo ? { logo: coin.logo } : {}),
+    mcapRank: coin.mcap_rank ?? 0,
+    r: SEARCH_RANK.subPage,
+    v: tastyMetrics[coin.route] ?? 0,
+    type: "Token",
+  };
+}
+
 export function buildEquitySearchResult(equity: EquitySearchInput, tastyMetrics: Record<string, number>): SearchResult {
   const slug = `${equity.ticker}:${equity.country}`;
   return {
@@ -1514,17 +1528,7 @@ async function generateSearchList() {
 
   const coins: Array<SearchResult> = [];
   for (const tokenKey in coinsData) {
-    const coin = coinsData[tokenKey];
-    coins.push({
-      id: `${coin.token_nk.replace(/[^a-zA-Z0-9_-]/g, "_")}_token`,
-      name: coin.symbol,
-      route: `/token/${encodeURIComponent(coin.symbol)}`,
-      ...(coin.logo ? { logo: coin.logo } : {}),
-      mcapRank: coin.mcap_rank ?? 0,
-      r: SEARCH_RANK.subPage,
-      v: tastyMetrics[`/token/${coin.symbol}`] ?? 0,
-      type: "Token",
-    });
+    coins.push(buildTokenSearchResult(coinsData[tokenKey], tastyMetrics));
   }
 
   const dats: Array<SearchResult> = [];

@@ -1,4 +1,11 @@
-import { getTokenExtras, getTokenRightsSymbols, reassignSymbolKeysByRank } from "./generateToken";
+import {
+  addPreviousTokensToRouteRegistry,
+  buildTokenDirectory,
+  createTokenRecord,
+  getTokenExtras,
+  getTokenRightsSymbols,
+  getTokenRouteForKey,
+} from "./generateToken";
 
 describe("generateToken token rights flags", () => {
   it("marks token-rights rows by token symbol when protocol metadata is missing", () => {
@@ -53,128 +60,186 @@ describe("generateToken token rights flags", () => {
   });
 });
 
-describe("reassignSymbolKeysByRank", () => {
-  it("moves the symbol slug to the entry with the best (lowest) mcap_rank", () => {
-    const bySlug: Record<string, any> = {
-      mega: {
-        name: "Megaton Finance",
-        symbol: "MEGA",
-        token_nk: "coingecko:megaton-finance",
-        route: "/token/MEGA",
-        mcap_rank: 4599,
-      },
-      megaeth: {
-        name: "MegaETH",
-        symbol: "MEGA",
-        token_nk: "coingecko:megaeth",
-        route: "/token/MegaETH",
-        mcap_rank: 262,
-      },
-    };
-
-    const reassigned = reassignSymbolKeysByRank(bySlug);
-
-    expect(reassigned).toBe(1);
-    expect(bySlug.mega.token_nk).toBe("coingecko:megaeth");
-    expect(bySlug.mega.route).toBe("/token/MEGA");
-    expect(bySlug.megaeth).toBeUndefined();
-    expect(bySlug["megaton-finance"].token_nk).toBe("coingecko:megaton-finance");
-    expect(bySlug["megaton-finance"].route).toBe("/token/Megaton%20Finance");
+describe("generateToken token routes", () => {
+  it("uses the symbol route only when the stable key is the symbol slug", () => {
+    expect(getTokenRouteForKey("data", { name: "Data Network", symbol: "DATA" })).toBe("/token/DATA");
   });
 
-  it("does nothing when the best-ranked entry already holds the symbol slug", () => {
-    const bySlug: Record<string, any> = {
-      mega: {
-        name: "MegaETH",
-        symbol: "MEGA",
-        token_nk: "coingecko:megaeth",
-        route: "/token/MEGA",
-        mcap_rank: 262,
-      },
-      "megaton-finance": {
-        name: "Megaton Finance",
-        symbol: "MEGA",
-        token_nk: "coingecko:megaton-finance",
-        route: "/token/Megaton%20Finance",
-        mcap_rank: 4599,
-      },
-    };
-
-    const reassigned = reassignSymbolKeysByRank(bySlug);
-
-    expect(reassigned).toBe(0);
-    expect(bySlug.mega.token_nk).toBe("coingecko:megaeth");
-    expect(bySlug["megaton-finance"].token_nk).toBe("coingecko:megaton-finance");
+  it("uses the token name route when the stable key is the name slug", () => {
+    expect(getTokenRouteForKey("streamr", { name: "Streamr", symbol: "DATA" })).toBe("/token/Streamr");
   });
 
-  it("treats missing or non-finite mcap_rank as worst rank", () => {
-    const bySlug: Record<string, any> = {
-      foo: {
-        name: "Foo Coin",
-        symbol: "FOO",
-        token_nk: "coingecko:foo-low",
-        route: "/token/FOO",
-      },
-      "foo-pro": {
-        name: "Foo Pro",
-        symbol: "FOO",
-        token_nk: "coingecko:foo-pro",
-        route: "/token/Foo%20Pro",
-        mcap_rank: 100,
-      },
-    };
-
-    const reassigned = reassignSymbolKeysByRank(bySlug);
-
-    expect(reassigned).toBe(1);
-    expect(bySlug.foo.token_nk).toBe("coingecko:foo-pro");
-    expect(bySlug.foo.route).toBe("/token/FOO");
-    expect(bySlug["foo-coin"].token_nk).toBe("coingecko:foo-low");
-    expect(bySlug["foo-coin"].route).toBe("/token/Foo%20Coin");
-    expect(bySlug["foo-pro"]).toBeUndefined();
+  it("uses the unique key as the route when symbol and name keys are already occupied", () => {
+    expect(getTokenRouteForKey("data-coingecko-data-hedge", { name: "DATA", symbol: "DATA" })).toBe(
+      "/token/data-coingecko-data-hedge"
+    );
   });
 
-  it("assigns the symbol slug to the best-ranked entry when no entry currently holds it", () => {
-    const bySlug: Record<string, any> = {
-      "bar-old": {
-        name: "Bar Old",
-        symbol: "BAR",
-        token_nk: "coingecko:bar-old",
-        route: "/token/Bar%20Old",
-        mcap_rank: 9000,
+  it("keeps an already assigned route when refreshing a token record", () => {
+    const record = createTokenRecord(
+      {
+        name: "Higher Ranked DATA",
+        symbol: "DATA",
+        token_nk: "coingecko:story-2",
+        on_yields: true,
+        mcap_rank: 10,
       },
-      "bar-new": {
-        name: "Bar New",
-        symbol: "BAR",
-        token_nk: "coingecko:bar-new",
-        route: "/token/Bar%20New",
-        mcap_rank: 50,
-      },
-    };
+      "/token/DATA"
+    );
 
-    const reassigned = reassignSymbolKeysByRank(bySlug);
-
-    expect(reassigned).toBe(1);
-    expect(bySlug.bar.token_nk).toBe("coingecko:bar-new");
-    expect(bySlug.bar.route).toBe("/token/BAR");
-    expect(bySlug["bar-new"]).toBeUndefined();
-    expect(bySlug["bar-old"].token_nk).toBe("coingecko:bar-old");
+    expect(record).toMatchObject({
+      name: "Higher Ranked DATA",
+      symbol: "DATA",
+      token_nk: "coingecko:story-2",
+      route: "/token/DATA",
+      is_yields: true,
+      mcap_rank: 10,
+    });
   });
 
-  it("leaves singletons untouched", () => {
-    const bySlug: Record<string, any> = {
-      btc: {
-        name: "Bitcoin",
-        symbol: "BTC",
-        token_nk: "coingecko:bitcoin",
-        route: "/token/BTC",
-        mcap_rank: 1,
+  it("bootstraps immutable route ownership from the existing token cache", () => {
+    const registry = addPreviousTokensToRouteRegistry(
+      {
+        "coingecko:streamr": {
+          key: "streamr",
+          route: "/token/Streamr",
+        },
+      },
+      [
+        [
+          "data",
+          {
+            name: "Data Network",
+            symbol: "DATA",
+            token_nk: "coingecko:story-2",
+            route: "/token/DATA",
+          },
+        ],
+      ]
+    );
+
+    expect(registry).toEqual({
+      "coingecko:streamr": {
+        key: "streamr",
+        route: "/token/Streamr",
+      },
+      "coingecko:story-2": {
+        key: "data",
+        route: "/token/DATA",
+      },
+    });
+  });
+
+  it("does not overwrite an existing route registry entry from token cache data", () => {
+    const registry = addPreviousTokensToRouteRegistry(
+      {
+        "coingecko:story-2": {
+          key: "data",
+          route: "/token/DATA",
+        },
+      },
+      [
+        [
+          "story",
+          {
+            name: "Data Network",
+            symbol: "DATA",
+            token_nk: "coingecko:story-2",
+            route: "/token/Data%20Network",
+          },
+        ],
+      ]
+    );
+
+    expect(registry["coingecko:story-2"]).toEqual({
+      key: "data",
+      route: "/token/DATA",
+    });
+  });
+
+  it("keeps dead route keys reserved and gives a new same-symbol token a fallback route", () => {
+    const liveToken = {
+      name: "Data Network",
+      symbol: "DATA",
+      token_nk: "coingecko:live-data",
+      mcap_rank: 100,
+    };
+    const routeRegistry = {
+      "coingecko:dead-data": {
+        key: "data",
+        route: "/token/DATA",
       },
     };
 
-    const reassigned = reassignSymbolKeysByRank(bySlug);
+    const result = buildTokenDirectory(
+      [liveToken],
+      new Map([["coingecko:live-data", { item: liveToken, extras: {} }]]),
+      [],
+      routeRegistry
+    );
 
-    expect(reassigned).toBe(0);
-    expect(bySlug.btc.token_nk).toBe("coingecko:bitcoin");
+    expect(result.bySlug.data).toBeUndefined();
+    expect(result.bySlug["data-network"]).toMatchObject({
+      name: "Data Network",
+      symbol: "DATA",
+      token_nk: "coingecko:live-data",
+      route: "/token/Data%20Network",
+    });
+    expect(result.routeRegistry["coingecko:dead-data"]).toEqual({
+      key: "data",
+      route: "/token/DATA",
+    });
+    expect(result.routeRegistry["coingecko:live-data"]).toEqual({
+      key: "data-network",
+      route: "/token/Data%20Network",
+    });
+    expect(result.reservedRouteCount).toBe(1);
+    expect(result.nameFallbackCount).toBe(1);
+  });
+
+  it("skips duplicate registry keys instead of re-keying the second owner", () => {
+    const firstToken = {
+      name: "DATA",
+      symbol: "DATA",
+      token_nk: "coingecko:first-data",
+      mcap_rank: 1000,
+    };
+    const secondToken = {
+      name: "Second DATA",
+      symbol: "DATA",
+      token_nk: "coingecko:second-data",
+      mcap_rank: 10,
+    };
+    const routeRegistry = {
+      "coingecko:first-data": {
+        key: "data",
+        route: "/token/DATA",
+      },
+      "coingecko:second-data": {
+        key: "data",
+        route: "/token/Second%20DATA",
+      },
+    };
+
+    const result = buildTokenDirectory(
+      [firstToken, secondToken],
+      new Map([
+        ["coingecko:first-data", { item: firstToken, extras: {} }],
+        ["coingecko:second-data", { item: secondToken, extras: {} }],
+      ]),
+      [],
+      routeRegistry
+    );
+
+    expect(result.bySlug.data).toMatchObject({
+      token_nk: "coingecko:first-data",
+      route: "/token/DATA",
+    });
+    expect(result.bySlug["second-data"]).toBeUndefined();
+    expect(result.routeRegistry["coingecko:second-data"]).toEqual({
+      key: "data",
+      route: "/token/Second%20DATA",
+    });
+    expect(result.skippedDuplicateRouteKeyCount).toBe(1);
   });
 });
