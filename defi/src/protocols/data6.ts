@@ -7052,7 +7052,7 @@ const data6: Protocol[] = [
     cmcId: null,
     tags: ["Order Book"],
     chains: ["Somnia"],
-    module: "dummy.js",
+    module: "dreamdex/index.js",
     twitter: "dreamDEXSomnia",
     audit_links: ["https://hacken.io/audits/somnia/"],
     dimensions: {
@@ -8568,6 +8568,30 @@ const data6: Protocol[] = [
     twitter: "TheBoatOfLeegs",
     github: ["BLACKDOOR2"],
     listedAt: 1782787677,
+  },
+  {
+    id: "8113",
+    name: "Money Protocol",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://www.moneyprotocol.co/
+    description: "Money Protocol is a decentralized system that allows anyone to monetize or borrow against their Bitcoin without paying an annual interest rate. When locking up BTC as collateral in Money Protocol and creating a Vault, the user can get instant liquidity by minting BPD. Bitcoin Protocol Dollar or BPD is a decentralized, collateral-backed stablecoin target pegged to the US Dollar",
+    chain: "RSK",
+    logo: `${protocolIconsUrl}/money-protocol`,
+    audits: "2",
+    gecko_id: null,
+    cmcId: null,
+    category: "CDP",
+    chains: ["RSK"],
+    module: "money-protocol/index.js",
+    twitter: "money_protocol",
+    github: ["moneyprotocol"],
+    audit_links: ["https://docs.moneyprotocol.co/docs/other-resources/security-audit"],
+    forkedFromIds: ["270"],
+    listedAt: 1782842332,
+    dimensions: {
+      fees: "money-protocol",
+    }
   },
 ];
 export default data6;
