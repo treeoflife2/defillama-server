@@ -8550,5 +8550,24 @@ const data6: Protocol[] = [
     parentProtocol: "parent#circle",
     listedAt: 1782778325,
   },
+  {
+    id: "8112",
+    name: "BlackDoor",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://blackdoor.claims
+    description: "Geo-anchored prediction markets on Arbitrum One. Each market is pinned to a real-world location on an interactive globe. Powered by FPMM, settled in USDC",
+    chain: "Arbitrum",
+    logo: `${protocolIconsUrl}/blackdoor`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Prediction Market",
+    chains: ["Arbitrum"],
+    module: "circle-gateway/index.js",
+    twitter: "TheBoatOfLeegs",
+    github: ["BLACKDOOR2"],
+    listedAt: 1782787677,
+  },
 ];
 export default data6;
