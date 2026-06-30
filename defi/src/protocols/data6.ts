@@ -8564,7 +8564,7 @@ const data6: Protocol[] = [
     cmcId: null,
     category: "Prediction Market",
     chains: ["Arbitrum"],
-    module: "circle-gateway/index.js",
+    module: "blackdoor/index.js",
     twitter: "TheBoatOfLeegs",
     github: ["BLACKDOOR2"],
     listedAt: 1782787677,
