@@ -1373,6 +1373,9 @@ export const chainCoingeckoIds = {
     chainId: 53935,
     twitter: "dfkchain",
     url: "https://defikingdoms.com/",
+    dimensions: {
+      fees: "dfk",
+    },
   },
   "CLV": {
     geckoId: "clover-finance",
@@ -2003,6 +2006,9 @@ export const chainCoingeckoIds = {
     cmcId: "21725",
     categories: ["EVM"],
     twitter: "StepApp_",
+    dimensions: {
+      fees: "step",
+    },
   },
   "TON": {
     geckoId: "the-open-network",
@@ -3381,6 +3387,9 @@ export const chainCoingeckoIds = {
     twitter: "NibiruChain",
     url: "https://nibiru.fi",
     chainId: 6900,
+    dimensions: {
+      fees: "nibiru",
+    },
   },
   "BSquared": {
     geckoId: "bsquared-network",
@@ -3808,6 +3817,9 @@ export const chainCoingeckoIds = {
     twitter: "dexalot",
     github: ["dexalot"],
     url: "https://dexalot.com",
+    dimensions: {
+      fees: "dexalot",
+    },
   },
   "BandChain": {
     geckoId: "band-protocol",

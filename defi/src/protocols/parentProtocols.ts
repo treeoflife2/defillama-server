@@ -2606,6 +2606,7 @@ const parentProtocols: IParentProtocol[] = [
     twitter: "GMX_IO",
     governanceID: ["snapshot:gmx.eth"],
     github: ["gmx-io"],
+    treasury: "gmx.js",
   },
   {
     id: "parent#swapbased",
