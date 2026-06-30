@@ -1,6 +1,7 @@
 import getTokenPrices from "./pendle";
 import { getPenpiePrices } from "./penpie";
 import { addPendleCrosschainPrices } from "./crosschain"
+import { Write } from "../../utils/dbInterfaces";
 
 const config: { [chain: string]: { pendleOracle: string } } = {
   ethereum: {
@@ -39,12 +40,20 @@ const config: { [chain: string]: { pendleOracle: string } } = {
 };
 
 export async function pendle(timestamp: number = 0) {
-  const ws = await Promise.all([
-    ...Object.keys(config).map((chain: string) =>
-      getTokenPrices(timestamp, chain, config[chain]),
+  // isolate per-chain failures: one bad chain must not wipe out prices for all others
+  const ws = await Promise.all(
+    Object.keys(config).map((chain: string) =>
+      getTokenPrices(timestamp, chain, config[chain]).catch((e) => {
+        console.error(`pendle ${chain} failed: ${e}`);
+        return [] as Write[];
+      }),
     ),
-  ]);
-  await addPendleCrosschainPrices(ws, timestamp);
+  );
+  try {
+    await addPendleCrosschainPrices(ws, timestamp);
+  } catch (e) {
+    console.error(`pendle crosschain failed: ${e}`);
+  }
   return ws;
 }
 
