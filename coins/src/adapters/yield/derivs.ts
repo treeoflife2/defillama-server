@@ -1071,6 +1071,21 @@ export const configs: { [adapter: string]: Config } = {
     decimals: 18,
     confidence: 1,
   },
+  USDso: {
+    rate: async ({ api }) => {
+      const frxUSD = "0x00000000D61733e7A393A10A5B48c311AbE8f1E5"
+      const custody = "0xEBc80dC35A23A76A6D43fDD99578d3bbD60766D9"
+      const usdSo = "0x00000022dA000002656c64D9eA6011ea952D008A"
+      const [bal, supply] = await Promise.all([
+        api.call({ abi: "erc20:balanceOf", target: frxUSD, params: [custody] }),
+        api.call({ abi: "erc20:totalSupply", target: usdSo })
+      ]);
+      return bal / supply;
+    },
+    chain: "somnia",
+    underlying: "0x00000000D61733e7A393A10A5B48c311AbE8f1E5",
+    address: "0x00000022dA000002656c64D9eA6011ea952D008A",
+  },
 };
 
 export async function derivs(timestamp: number) {

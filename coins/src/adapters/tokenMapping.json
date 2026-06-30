@@ -16630,6 +16630,11 @@
       "to": "coingecko#ethereum",
       "decimals": 18,
       "symbol": "WETH"
+    },
+    "0x00000000D61733e7A393A10A5B48c311AbE8f1E5": {
+      "to": "coingecko#frax-usd",
+      "decimals": 18,
+      "symbol": "frxUSD"
     }
   },
   "camp": {
