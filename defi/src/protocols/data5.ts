@@ -3805,7 +3805,14 @@ const data5: Protocol[] = [
       {
         name: "RedStone",
         type: "Primary",
-        proof: ["https://docs.curvance.com/cve/developer-docs/copy-of-dynamic-liquidation-engine-dle/orderflow-auction-system#oracle-data-flow"]
+        proof: ["https://docs.curvance.com/cve/developer-docs/copy-of-dynamic-liquidation-engine-dle/orderflow-auction-system#oracle-data-flow"],
+        endDate: "2026-06-30"
+      },
+      {
+        name: "Chainlink",
+        type: "Primary",
+        proof: ["https://docs.curvance.com/app/protocol-overview/liquidity-markets/oracles#preferred-oracle-partners","https://app.curvance.com/market?address=0xBc4cd7bbd8d38027A88838B88BA04561FA778C35"],
+        startDate: "2026-06-30"
       }
     ],
     audit_links: [
