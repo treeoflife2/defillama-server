@@ -8653,7 +8653,89 @@ const data6: Protocol[] = [
     twitter: null,
     forkedFromIds: ["1407"],
     listedAt: 1782860371,
-    deadUrl: true,
+  },
+  {
+    id: "8117",
+    name: "Livara",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://livara.app/
+    description:
+      "Livara is a crypto prediction market platform where users create or join event-based prediction pools and get paid in USDT based on the outcome.",
+    chain: "Polygon",
+    logo: `${protocolIconsUrl}/livara`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Prediction Market",
+    chains: ["Polygon"],
+    module: "livara/index.js",
+    twitter: "livaracripto",
+    listedAt: 1782870218,
+  },
+  {
+    id: "8118",
+    name: "Fibo",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://fibo.fun
+    description:
+      "Fibo is a prediction game on Base chain.",
+    chain: "Base",
+    logo: `${protocolIconsUrl}/fibo`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Prediction Market",
+    oraclesBreakdown: [{name: "Pyth", type: "Primary", proof: ["https://github.com/DefiLlama/dimension-adapters/pull/7773"]}],
+    chains: ["Base"],
+    module: "dummy.js",
+    twitter: "fibodotfun",
+    dimensions: {
+      dexs: "fibo",
+      fees: "fibo",
+    }
+  },
+  {
+    id: "8119",
+    name: "OHAYO Perps",
+    address: null,
+    symbol: "-",
+    url: "https://app.ohayo.global",
+    description: "OHAYO Perps allows users to trade perps on Hyperliquid L1.",
+    chain: "Hyperliquid L1",
+    logo: `${protocolIconsUrl}/ohayo-perps`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    tags: ["Hyperliquid Builder"],
+    chains: ["Hyperliquid L1"],
+    module: "dummy.js",
+    twitter: "OhayoGlobal",
+    dimensions: {
+      fees: "ohayo-perps",
+      derivatives: "ohayo-perps",
+    }
+  },
+  {
+    id: "8120",
+    name: "Ayebot",
+    address: null,
+    symbol: "-",
+    url: " ", // pending to add url https://ayebot.io/
+    description: "Ayebot is a Telegram trading bot for Solana and BNB Chain that supports self-custodial swaps, limit orders, DCA, bridging, and social leader trading.",
+    chain: "Solana",
+    logo: `${protocolIconsUrl}/ayebot`,
+    audits: "0",
+    gecko_id: null,
+    cmcId: null,
+    category: "Telegram Bot",
+    chains: ["Solana", "Binance"],
+    module: "dummy.js",
+    twitter: "ayebot_io",
+    dimensions: {
+      fees: "ayebot",
+    }
   },
 ];
 export default data6;
