@@ -4386,6 +4386,7 @@ const data3_0: Protocol[] = [
       "https://github.com/peckshield/publications/blob/master/audit_reports/PeckShield-Audit-Report-LionDEX-v1.0.pdf",
     ],
     listedAt: 1682516346,
+    deadUrl: true,
     dimensions: {
       fees: "liondex"
     }
@@ -7329,6 +7330,7 @@ const data3_0: Protocol[] = [
     twitter: "enosys_global",
     parentProtocol: "parent#enosys",
     listedAt: 1685051391,
+    deadUrl: true
   },
   {
     id: "3031",
@@ -13664,7 +13666,7 @@ const data3_0: Protocol[] = [
     chains: ["Base"],
     module: "rocketswap-cc/index.js",
     forkedFromIds: ["2197"],
-    twitter: null,
+    twitter: "Rocket_Swap_",
     listedAt: 1690797861,
   },
   {
@@ -27971,6 +27973,7 @@ const data3_1: Protocol[] = [
     audit_links: ["https://certificate.quantstamp.com/full/land-x-finance.pdf"],
     github: ["LandXit"],
     listedAt: 1703552397,
+    deadUrl: true
   },
   {
     id: "3961",
@@ -30499,6 +30502,7 @@ const data3_1: Protocol[] = [
     audit_links: ["https://doc.ionic.money/ionic-documentation/audit"],
     github: ["ionicprotocol"],
     listedAt: 1706291385,
+    deadUrl: true
   },
   {
     id: "4071",
@@ -61603,7 +61607,8 @@ const data3_3: Protocol[] = [
     dimensions: {
       fees: "thetis-market",
       derivatives: "thetis-market"
-    }
+    },
+    deadUrl: true
   },
   {
     id: "5470",
@@ -61896,7 +61901,8 @@ const data3_3: Protocol[] = [
     listedAt: 1733834266,
     dimensions: {
       aggregators: "thetis-market"
-    }
+    },
+    deadUrl: true
   },
   {
     id: "5484",

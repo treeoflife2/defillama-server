@@ -2951,6 +2951,7 @@ const data4: Protocol[] = [
     module: "moose/index.js",
     twitter: "moose_market",
     listedAt: 1738147302,
+    deadUrl: true,
   },
   {
     id: "5688",
@@ -6953,6 +6954,7 @@ const data4: Protocol[] = [
     github: ["Synnax-Protocol"],
     stablecoins: ["synnax-stablecoin"],
     listedAt: 1741083240,
+    deadUrl: true
   },
   {
     id: "5861",
@@ -26736,7 +26738,8 @@ const data4: Protocol[] = [
     module: "moremarketsxyz/index.js",
     twitter: "moremarketsxyz",
     audit_links: ["https://docs.moremarkets.xyz/developers/contracts"],
-    listedAt: 1757630173
+    listedAt: 1757630173,
+    deadUrl: true
   },
   // { duplicate listing
   //   id: "6718",
@@ -29510,7 +29513,8 @@ const data4: Protocol[] = [
       derivatives: "xpanse-perps",
       'open-interest': "xpanse-perps",
       fees: "xpanse-perps",
-    }
+    },
+    deadUrl: true
   },
   {
     id: "6846",

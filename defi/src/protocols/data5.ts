@@ -2621,6 +2621,7 @@ const data5: Protocol[] = [
     dimensions: {
       dexs: "rush",
     },
+    deadUrl: true,
   },
   {
     id: "7005",
@@ -4058,6 +4059,7 @@ const data5: Protocol[] = [
     dimensions: {
       "bridge-aggregators": "mynth",
     },
+    deadUrl: true,
   },
   {
     id: "7064",
@@ -5193,6 +5195,7 @@ const data5: Protocol[] = [
     dimensions: {
       fees: "everclear",
     },
+    deadUrl: true,
   },
   {
     id: "7115",

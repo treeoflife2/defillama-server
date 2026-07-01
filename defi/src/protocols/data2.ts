@@ -3143,6 +3143,7 @@ const data2: Protocol[] = [
     audit_links: ["https://static.horizonprotocol.com/Horizon-Protocol-Smart-Contract-Audit-Report.pdf"],
     listedAt: 1646762203,
     parentProtocol: "parent#xpanse",
+    deadUrl: true,
   },
   /*
   { //TVL was always $0
@@ -8772,6 +8773,7 @@ const data2: Protocol[] = [
     audit_links: ["https://solidity.finance/audits/CakeMonster"],
     listedAt: 1653409255,
     github: ["cake-monster"],
+    deadUrl: true,
   },
   {
     id: "1780",
@@ -11222,6 +11224,7 @@ const data2: Protocol[] = [
     module: "frozen-walrus/index.js",
     twitter: "WalrusFinance",
     listedAt: 1657364601,
+    deadUrl: true,
   },
   {
     id: "1889",
@@ -23697,6 +23700,7 @@ const data2: Protocol[] = [
     audit_links: ["https://github.com/xBacked-DAO/xbacked-audits"],
     listedAt: 1673954939,
     github: ["xbacked-dao", "xBacked-DAO"],
+    deadUrl: true,
   },
   {
     id: "2448",
@@ -26448,6 +26452,7 @@ const data2: Protocol[] = [
     audit_links: ["https://docs.hxro.network/hxro-token/staking-and-governance/15-9-2022-audit"],
     wrongLiquidity: true,
     listedAt: 1677155712,
+    deadUrl: true,
   },
   {
     id: "2575",

@@ -6258,6 +6258,7 @@ const parentProtocols: IParentProtocol[] = [
     chains: [],
     twitter: "ThetisMarket",
     github: ["thetis-market"],
+    deadUrl: true,
   },
   {
     id: "parent#holdstation",
@@ -8976,6 +8977,7 @@ const parentProtocols: IParentProtocol[] = [
     twitter: "XpanseTrade",
     governanceID: ["snapshot:horizonprotocol.eth"],
     github: ["Horizon-Protocol"],
+    deadUrl: true,
   },
   {
     id: "parent#comet-swap",

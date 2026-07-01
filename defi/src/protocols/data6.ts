@@ -8236,7 +8236,8 @@ const data6: Protocol[] = [
     dimensions: {
       fees: "vibeliquid-perps",
       derivatives: "vibeliquid-perps",
-    }
+    },
+    deadUrl: true
   },
   {
     id: "8097",

@@ -5924,6 +5924,7 @@ export const chainCoingeckoIds = {
     twitter: "EverclearOrg",
     url: "https://www.everclear.org/",
     chainId: 25327,
+    deadUrl: true,
   },
   // "SXT Chain": { commented to keep all metrics under the protocol listing
   //   geckoId: null,
